@@ -56,9 +56,9 @@ export function localDate(date = new Date()) {
   return date.getFullYear() + '-' + two(date.getMonth()+1) + '-' + two(date.getDate());
 }
 
-export function calculate(expenses) {
-  return expenses.reduce((total, item) => total + Math.round(item.amount*100), 0) / 100;
-}
+export const toCents = amount => Math.round(amount * 100);
+export const expenseCents = expenses => expenses.reduce((total,item)=>total+toCents(item.amount),0);
+export const calculate = expenses => expenseCents(expenses)/100;
 
 export function csv(expenses) {
   const quote = value => {

@@ -1,4 +1,5 @@
-import {storageKey, statuses, originalOrder, emptyInfo, emptyState, validateState, localDate, calculate, csv} from './state.js';
+import {mountGeoMap} from './geo-map.js';
+import {storageKey, statuses, originalOrder, emptyInfo, emptyState, validateState, localDate, calculate, expenseCents, toCents, csv} from './state.js';
 
 const main = document.querySelector('main');
 const navigation = document.querySelector('#navigation');
@@ -6,6 +7,7 @@ const notice = document.querySelector('#notice');
 const escape = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const shortDate = date => date.slice(5).replace(/^0/,'').replace('-','/').replace(/\/0/,'/');
 const money = value => '¥' + value.toLocaleString('zh-CN',{maximumFractionDigits:2});
+const centMoney = cents => money(cents/100);
 const week = ['周六','周日','周一','周二','周三'];
 const weekName = ['星期六','星期日','星期一','星期二','星期三'];
 const two = value => String(value).padStart(2,'0');
@@ -42,7 +44,7 @@ let current;
 let loadedOffline = false;
 let storageFailure = false;
 let noticeTimer;
-let ui = {foodGroup:'全部',foodDay:'all',foodMode:'all',foodQuery:'',mapFilter:'all',mapId:'',budgetDay:'all',editExpense:'',timeline:'core'};
+let ui = {foodGroup:'全部',foodDay:'all',foodMode:'all',foodQuery:'',mapFilter:'all',mapId:'',budgetDay:'all',editExpense:'',timeline:'compact'};
 
 const button = (text, action, value = '', css = 'secondary', symbol = '', extra = '') =>
   '<button type="button" class="button '+css+'" data-action="'+action+'" data-value="'+escape(value)+'" '+extra+'>' + (symbol ? icon(symbol) : '') + text + '</button>';
@@ -80,6 +82,10 @@ function persist(next) {
 }
 
 function mutate(update) {
+  if (storageFailure) {
+    showNotice('原有记录暂时无法读取。请先从「导出与导入」备份，再恢复有效记录。');
+    return false;
+  }
   const next = JSON.parse(JSON.stringify(state));
   update(next);
   if (!validateState(next,data)) {
@@ -95,9 +101,9 @@ function startRoute() {
 }
 
 function route() {
-  const [page, index] = location.hash.slice(1).split('/');
+  const [page, index, stop] = location.hash.slice(1).split('/');
   const day = /^[0-4]$/.test(index ?? '') ? Number(index) : null;
-  if (page === 'trip') return {page,day:day ?? startRoute().day};
+  if (page === 'trip') return {page,day:day ?? startRoute().day,stop:/^[a-z0-9-]+$/.test(stop??'')?stop:''};
   if (page === 'map') return {page,day};
   if (['home','food','me','budget','stats','photos','gifts','backup','info','adjust','records','offline','custom'].includes(page)) return {page,day:null};
   return startRoute();
@@ -170,14 +176,23 @@ function verification(item) {
     (record.source ? external('查看核实来源',record.source,'text') : '');
 }
 
-function mapLinks(item) {
-  if (item.id === 'stay' && !state.info.hotel && !state.info.address) return link('填写住宿信息','#info','secondary','pin');
-  if (item.kind === '随缘' && !item.address) return '';
+function mapUrls(item) {
   const keyword = item.keyword || [item.id==='stay'&&!state.info.hotel?'':item.name,item.address||item.region].filter(Boolean).join(' ');
   const amap = new URL('https://uri.amap.com/search');
   amap.search = new URLSearchParams({keyword,city:'厦门',view:'list'});
   const apple = new URL('https://maps.apple.com/');
   apple.search = new URLSearchParams({q:keyword+' 厦门'});
+  return {keyword,amap,apple};
+}
+
+function quickNav(item) {
+  if (item.id==='stay'&&!state.info.hotel&&!state.info.address) return link('住宿','#info','compact-icon','pin');
+  return external('<span class="sr-only">导航 '+escape(item.name)+'</span>',mapUrls(item).amap,'compact-icon','pin');
+}
+
+function mapLinks(item) {
+  if (item.id==='stay'&&!state.info.hotel&&!state.info.address) return link('填写住宿信息','#info','secondary','pin');
+  const {keyword,amap,apple}=mapUrls(item);
   return '<div class="actions map-links">'+external('高德地图',amap,'primary','pin')+
     external('Apple 地图',apple)+button(item.address?'复制地址':'复制搜索词','copy',item.address||keyword)+'</div>';
 }
@@ -202,24 +217,35 @@ function tabs(active,withAll=false) {
       '><strong>'+shortDate(date)+'</strong><span>'+ (i===2?'纪念日':week[i])+'</span></a>').join('')+'</nav>';
 }
 
+function dayImage(module) {
+  return module.id === 'departure' ? 'departure' : module.accent;
+}
+
+function budgetBalance() {
+  return state.total === null ? null : toCents(state.total) - expenseCents(state.expenses);
+}
+
 function home() {
   const [done,total] = tripProgress();
   const today = startRoute();
-  const spent = calculate(state.expenses);
-  const budgetLabel = state.total===null ? '实际支出' : '预算使用';
-  const budgetAmount = state.total===null ? money(spent) : money(spent)+' / '+money(state.total);
-  const attrs = i => ' class="day-tile '+(i===2?'anniversary':'')+'" href="#trip/'+i+'"';
+  const isTripDay = today.page === 'trip';
+  const afterTrip = localDate() > data.itinerary.dates.at(-1);
+  const next = afterTrip ? null : nextStop(today.day);
+  const balance = budgetBalance();
   return '<section class="hero"><img class="hero-photo" src="./assets/images/cover.webp" alt="厦门海滨实景" fetchpriority="high"><div class="hero-content">'+
     '<p class="eyebrow">OUR FIRST ANNIVERSARY · XIAMEN</p><h1 aria-label="与海相约 · 厦门纪行">与海相约<span>厦门纪行</span></h1>'+
-    '<p class="hero-dates">2026.11.28 — 12.02 <span>5 天 4 晚 · 2 人</span></p>'+
-    link(today.page==='trip'?'查看今天':'打开行程','#trip/'+today.day,'hero-button','itinerary')+'</div></section>'+
-    '<div class="anniversary-strip">'+icon('heart')+'<span><strong>11月30日 · 一周年纪念日</strong><small>这个日子留给我们</small></span>'+link('查看当天','#trip/2','text')+'</div>'+
-    '<div class="quick-summary"><a href="#stats" class="summary-card">'+icon('check')+'<div><span>景点打卡</span><strong>'+done+' / '+total+'</strong></div></a>'+
-    '<a href="#budget" class="summary-card">'+icon('wallet')+'<div><span>'+budgetLabel+'</span><strong>'+budgetAmount+'</strong></div></a></div>'+
-    '<section class="home-days">'+section('五天行程',link('总地图','#map','text','map'))+
+    '<p class="hero-dates">2026.11.28 — 12.02 <span>5 天 4 晚 · 2 人</span></p></div></section>'+
+    '<div class="anniversary-strip">'+icon('heart')+'<strong>11月30日 · 一周年纪念日</strong>'+link('查看当天','#trip/2','text')+'</div>'+
+    '<div class="home-today"><a class="today-link" href="#trip/'+today.day+'">'+icon('itinerary')+'<div><small>'+
+    (isTripDay?'今天 · '+shortDate(data.itinerary.dates[today.day]):'旅行行程')+'</small><strong>'+dayTitle(today.day)+'</strong></div>'+icon('chevron')+'</a>'+
+    (next?'<a class="today-link" href="#trip/'+today.day+'/'+next.id+'">'+icon('pin')+'<div><small>下一站 · '+escape(next.time.split('–')[0])+'</small><strong>'+escape(place(next.id).name)+'</strong></div>'+icon('chevron')+'</a>':'')+'</div>'+
+    '<div class="quick-summary"><a href="#budget" class="summary-card">'+icon('wallet')+'<div><span>'+
+    (balance===null?'剩余预算':balance<0?'已超预算':'剩余预算')+'</span><strong>'+(balance===null?'待设置':centMoney(Math.abs(balance)))+'</strong><small>已支出 '+centMoney(expenseCents(state.expenses))+(state.total===null?'':' / '+money(state.total))+'</small></div></a>'+
+    '<a href="#stats" class="summary-card">'+icon('check')+'<div><span>景点打卡</span><strong>'+done+' / '+total+'</strong></div></a></div>'+
+    '<section class="home-days">'+section('五天行程',link('总地图','#map','text','map'))+tabs(isTripDay?today.day:null)+
     '<div class="day-grid">'+data.itinerary.dates.map((date,i) => {
       const module = moduleAt(i);
-      return '<a'+attrs(i)+'><img loading="lazy" alt="" src="./assets/images/'+module.accent+'.webp"><div><span class="tile-date">DAY '+two(i+1)+' <i></i> '+shortDate(date)+' '+week[i]+'</span><h3>'+dayTitle(i)+'</h3><p>'+escape(module.area)+'</p></div>'+icon('chevron')+'</a>';
+      return '<a class="day-tile '+(i===2?'anniversary':'')+'" href="#trip/'+i+'"><img loading="lazy" alt="" src="./assets/images/'+dayImage(module)+'.webp"><div><span class="tile-date">DAY '+two(i+1)+' <i></i> '+shortDate(date)+' '+week[i]+'</span><h3>'+dayTitle(i)+'</h3><p>'+escape(module.area)+'</p></div>'+icon('chevron')+'</a>';
     }).join('')+'</div></section>'+
     '<div class="actions home-actions">'+link('住宿与交通','#info','secondary','train')+link('离线准备','#offline','secondary','wifi')+'</div>'+
     '<footer class="credits">'+external('实景照片与授权','./credits.html','text')+'</footer>';
@@ -232,65 +258,146 @@ function timelineRows(day) {
   }))];
 }
 
+function nextStop(day) {
+  const outstanding = timelineRows(day).filter(row => row.priority!=='交通' && checkState('places',row.id).status==='pending');
+  const core = outstanding.filter(row => row.priority==='核心');
+  const candidates = core.length ? core : outstanding;
+  if (data.itinerary.dates[day] !== localDate()) return candidates[0];
+  const now = new Date();
+  const cutoff = now.getHours()*60 + now.getMinutes() - 20;
+  return candidates.find(row => {
+    const hours = [...row.time.matchAll(/(\d{1,2}):(\d{2})/g)];
+    const end = hours.at(-1);
+    return end && Number(end[1])*60+Number(end[2])>=cutoff;
+  });
+}
+
+const tourGroups = [
+  ['八市老街','bashi','kaihe-road','yingping-road'],
+  ['中山路街区','zhongshan-road','china-city'],
+  ['殿前 · 二选一','dianqian-exit-five','qingshui-palace'],
+  ['龙舟池一带','jimei-village','jimei-dragon-boat-pool','nanxun-lou','south-dike-park'],
+  ['嘉庚公园一带','jiageng-park','aoyuan'],
+  ['集美大社与石鼓路','jimei-dashe','shigu-road'],
+  ['沙坡尾','shapowei-art','shapowei-harbor'],
+  ['厦大与演武沿岸','xmu-exterior','cat-street','yanwu-platform'],
+  ['白城与炮台','baicheng-beach','hulishan-fort'],
+  ['珍珠湾与曾厝垵','pearl-bay','zengcuoan'],
+  ['天泉步道与盼归塔','tianquan-square','pangui-tower'],
+  ['沿海步道','music-square','xitouxia','haiyuntai'],
+  ['黄厝海边','buzai-bookstore','wanyue-slope','huangcuo-beach','yefengzhai'],
+  ['鼓浪屿西岸','gulang-stone','meihua-beach'],
+  ['港仔后与菽庄','gangzaihou-beach','shuzhuang-garden'],
+  ['鼓浪屿历史建筑','joint-court','bagua-organ-museum'],
+  ['老城散步','xian-flower-market','park-west-road','huaxin-road','caopuwei-road','xingfu-road','gugong-road','sibei','zhongshan-park']
+];
+const groupLabels = new Map(tourGroups.flatMap(([label,...ids])=>ids.map(id=>[id,label])));
+function groupedStops(rows) {
+  const groups = [];
+  for (const row of rows) {
+    const name = groupLabels.get(row.id);
+    if (name && groups.at(-1)?.name === name) groups.at(-1).rows.push(row);
+    else groups.push({name,rows:[row]});
+  }
+  return groups;
+}
+
+function urgentNotes(module) {
+  if (module.id==='gulangyu') {
+    return '<div class="urgent">'+icon('ferry')+'<p><strong>鼓浪屿当天往返。</strong> 三丘田夜航至厦门轮渡码头，提前核对末班、停检与停航。'+
+      external('轮渡官网',ferrySite,'inline-link')+'</p></div>';
+  }
+  if (module.id==='coast') {
+    return '<div class="urgent">'+icon('clock')+'<p><strong>南普陀寺预约。</strong> 出发前在官方小程序核对实名预约时段及证件要求。</p></div>';
+  }
+  if (module.id==='departure') {
+    return '<div class="urgent">'+icon('train')+'<div><p><strong>返程前往厦门北站。</strong> 取行李后出发，建议发车前至少一小时到站。</p>'+travelInfo('xiamen-north')+'</div></div>';
+  }
+  return '';
+}
+
 function dayView(day) {
   const module = moduleAt(day);
   const full = timelineRows(day);
   const [done,total] = dayProgress(day);
-  const shown = full.filter(row => ui.timeline==='all' || row.priority==='核心' || row.priority==='交通');
-  const mainRoute = module.route.filter(id => id !== 'stay' && place(id).kind==='景点');
-  const keyRoute = mainRoute.length ? mainRoute.filter(id => full.some(row => row.id===id && row.priority==='核心')) : module.route;
+  const next = nextStop(day);
+  const keyStops = groupedStops(full).flatMap(group=>{
+    const stops=group.rows.filter(row=>row.priority==='核心');
+    return stops.length?[{time:stops[0].time.split('–')[0],names:stops.map(row=>place(row.id).name),id:stops[0].id}]:[];
+  });
   const anniversary = day === 2;
-  return tabs(day)+'<header class="day-hero '+(anniversary?'anniversary':'')+'"><img src="./assets/images/'+module.accent+'.webp" alt=""><div>'+
+  const nearby = dayFood(day);
+  return '<div class="sticky-dates">'+tabs(day)+'</div><header class="day-hero '+(anniversary?'anniversary':'')+'"><img src="./assets/images/'+dayImage(module)+'.webp" alt=""><div>'+
     '<p class="eyebrow">DAY '+two(day+1)+' · '+shortDate(data.itinerary.dates[day])+' '+weekName[day]+'</p><h1>'+dayTitle(day)+'</h1>'+
-    '<p>'+escape(module.area)+'</p>'+(anniversary?flag('一周年纪念日','pink'):'')+'</div></header>'+
-    '<section class="overview panel"><div class="overview-meta"><span>'+icon('clock')+' 建议出门 <strong>'+escape(module.departure)+'</strong></span><span>'+done+'/'+total+' 景点已打卡</span></div>'+
-    progress(done,total,'当天景点打卡')+section('核心路线',link('当天地图','#map/'+day,'text','map'))+
-    '<p class="route-line">'+keyRoute.map(id=>escape(place(id).name)).join('<span> / </span>')+'</p>'+
-    '<div class="actions">'+button('顺路吃喝','jump','day-food','secondary','food')+button('注意事项','jump','day-notes','secondary','list')+'</div></section>'+
-    (anniversary?'<div class="callout anniversary-note">'+icon('heart')+'<p><strong>18:30 后 · 纪念日晚间自由活动</strong><br>留时间拍一张合照，再就近挑晚餐。没有指定预订。</p></div>':'')+
-    '<section class="day-timeline">'+section('时间轴')+'<div class="chips" aria-label="行程密度">'+chip('核心与交通','core',ui.timeline==='core','timeline')+
-    chip('全部安排 · '+full.length,'all',ui.timeline==='all','timeline')+'</div>'+
-    '<div class="timeline">'+shown.map(row => placeCard(place(row.id),row,day)).join('')+'</div></section>'+
+    '<p>'+escape(module.area)+(anniversary?' · 一周年纪念日':'')+'</p></div></header>'+
+    '<section class="overview panel"><div class="overview-meta"><span>'+icon('clock')+' 建议出门 <strong>'+escape(module.departure)+'</strong></span><span>'+done+'/'+total+' 已打卡</span></div>'+
+    '<div class="core-schedule" aria-label="核心行程">'+keyStops.map(row=>
+      '<a href="#trip/'+day+'/'+row.id+'"><time>'+escape(row.time)+'</time><span>'+escape(row.names.join('、'))+'</span></a>').join('')+'</div>'+
+    '<div class="actions">'+(next?button('下一站 · '+escape(place(next.id).name),'jump','stop-'+next.id,'primary','pin'):'')+
+    link('当天地图','#map/'+day,'secondary','map')+button('提醒','jump','day-notes','text')+'</div></section>'+
+    urgentNotes(module)+
+    (anniversary?'<div class="anniversary-line">'+icon('heart')+' 18:30 后 · 纪念日晚间自由活动</div>':'')+
+    '<section class="day-timeline"><div class="section-heading"><h2>时间轴</h2><div class="mode-toggle" aria-label="行程展示">'+
+    chip('紧凑','compact',ui.timeline==='compact','timeline')+chip('详细','detail',ui.timeline==='detail','timeline')+'</div></div>'+
+    '<div class="timeline '+(ui.timeline==='detail'?'is-detailed':'')+'">'+groupedStops(full).map(group=>stopGroup(group,day,nearby)).join('')+'</div></section>'+
     '<section id="day-notes" class="panel notes">'+section('当天注意事项')+'<ul>'+module.reminders.map(line=>'<li>'+escape(line)+'</li>').join('')+'</ul>'+
     (module.id==='gulangyu'?external('厦门轮渡官网',ferrySite,'secondary','ferry'):'')+
     (module.id==='departure'?'<div class="actions">'+data.itinerary.departureBackup.map(id=>link(escape(place(id).name),'#backup','text')).join('')+'</div>':'')+'</section>'+
-    '<section id="day-food">'+section('顺路吃喝',link('美食库','#food','text'))+'<p class="subtle">到附近再挑，按当天营业和体力决定。</p>'+
-    (dayFood(day).map(item=>foodCard(item,'day-'+day)).join('')||empty('当天暂无顺路美食。'))+'</section>';
+    dayFoodFooter(nearby,day) ;
 }
 
-function checkControls(type,item) {
+function dayFoodFooter(nearby,day) {
+  const visited=new Set(timelineRows(day).map(row=>row.id));
+  const overflow = nearby.filter(item => item.group==='纪念日晚餐' || !item.placeIds.some(id=>visited.has(id)));
+  return '<section id="day-food">'+section(overflow.length?'其他就近吃喝':'顺路吃喝',link('美食库','#food','text'))+
+    (overflow.map(item=>foodCard(item,'day-'+day)).join('')||'<p class="fine">按上方游览区域查看就近店铺。</p>')+'</section>';
+}
+
+function stopGroup(group,day,nearby) {
+  const associated = nearby.filter(item=>item.group!=='纪念日晚餐' && group.rows.some(row=>item.placeIds.includes(row.id)));
+  const first = group.rows[0];
+  return '<section class="stop-group"><header class="stop-group-top"><time>'+escape(first.time)+'</time>'+
+    (group.rows.length>1?'<strong>'+escape(group.name)+'</strong>':'')+'</header>'+
+    group.rows.map((row,i)=>timelineStop(row,day,i===0)).join('')+
+    (associated.length?detail('near-'+day+'-'+first.id,'<span class="near-label">'+icon('food')+'附近吃喝</span><span class="near-names">'+
+      escape(associated.map(item=>item.name).join('、'))+'</span>',associated.map(item=>foodCard(item,'near-'+day+'-'+first.id)).join(''),'nearby-food'):'')+'</section>';
+}
+
+function timelineStop(row,day,first) {
+  const item = place(row.id);
+  const key = day+'-'+row.time+'-'+item.id;
+  const currentStatus = checkState('places',item.id).status;
+  return '<article '+(row.priority==='交通'?'':'id="stop-'+item.id+'" ')+'class="timeline-stop'+(item.photo?'':' no-photo')+'"><div class="stop-line">'+
+    '<div class="stop-name"><h3>'+escape(item.name)+'</h3><div class="stop-meta">'+flag(row.priority,row.priority==='核心'?'core':'')+
+    (first?'':'<time>'+escape(row.time)+'</time>')+(currentStatus==='skipped'?'<span>已跳过</span>':'')+'</div></div>'+
+    '<div class="stop-tools">'+quickNav(item)+
+    (row.priority==='交通'?'':button('', 'done','places:'+item.id,'compact-icon '+(currentStatus==='done'?'success':''),'check',
+      'aria-label="'+(currentStatus==='done'?'已完成 ':'打卡 ')+escape(item.name)+'" aria-pressed="'+(currentStatus==='done')+'"'))+'</div></div>'+
+    travelInfo(item.id)+(item.photo?'<p class="photo-preview">'+icon('camera')+' '+escape(item.photo.area)+'</p>':'')+
+    detail(key,'<span>'+ (item.photo?'详情与拍照':'详情与导航')+'</span>',
+      '<p>'+escape(item.summary)+' · '+escape(row.duration)+'</p>'+
+      (row.note?'<p class="callout">'+escape(row.note)+'</p>':'')+
+      mapLinks(item)+verification(item)+(row.priority==='交通'?'':checkControls('places',item,true))+
+      (item.photo?photoPanel(item):''),'stop-detail')+'</article>';
+}
+
+function checkControls(type,item,alreadyHasButton=false) {
   const stored = checkState(type,item.id);
   const label = statusLabels[type];
-  return '<div class="check-controls">'+button(stored.status==='done'?'已完成':'完成打卡','done',type+':'+item.id,stored.status==='done'?'success':'secondary','check',
-    'aria-pressed="'+(stored.status==='done')+'"')+
+  return '<div class="check-controls">'+(alreadyHasButton?'':button(stored.status==='done'?'已完成':'完成打卡','done',type+':'+item.id,stored.status==='done'?'success':'secondary','check',
+    'aria-pressed="'+(stored.status==='done')+'"'))+
     '<label class="check-select"><span class="sr-only">'+escape(item.name)+'打卡状态</span><select data-update="status" data-id="'+item.id+'" data-type="'+type+'" aria-label="'+escape(item.name)+'打卡状态">'+
     Object.entries(statuses).map(([id,text])=>option(id,text,stored.status)).join('')+'</select></label>'+
     button(stored.favorite?'已收藏':'收藏','favorite',type+':'+item.id,stored.favorite?'rose':'secondary','heart',
       'aria-pressed="'+stored.favorite+'" aria-label="'+(stored.favorite?'取消':'')+'收藏'+label+' '+escape(item.name)+'"')+'</div>';
 }
 
-function placeCard(item,row,day) {
-  const timeline = Boolean(row);
-  const countable = !['住宿','交通'].includes(item.kind);
-  const key = (timeline?day+'-'+row.time:'place')+'-'+item.id;
-  const near = timeline ? dayFood(day).filter(entry => entry.placeIds.includes(item.id) && entry.group!=='纪念日晚餐') : [];
-  return '<article class="place-card '+(timeline?'timeline-card':'panel')+'">'+(timeline?
-    '<div class="place-time"><time>'+escape(row.time)+'</time>'+flag(row.priority,row.priority==='核心'?'core':'')+'</div>':'')+
-    '<div class="place-main"><h3>'+escape(item.name)+'</h3><p>'+escape(item.summary)+'</p>'+
-    (timeline?'<span class="fine">'+icon('clock')+' '+escape(row.duration)+'</span>':flag(item.region))+
-    travelInfo(item.id)+
-    (item.photo?'<p class="photo-preview">'+icon('camera')+' '+escape(item.photo.area)+'</p>':'')+
-    '<div class="actions place-shortcuts">'+
-    (countable?button(checkState('places',item.id).status==='done'?'已完成':'打卡','done','places:'+item.id,checkState('places',item.id).status==='done'?'success':'secondary','check','aria-pressed="'+(checkState('places',item.id).status==='done')+'"'):'')+
-    button('地图导航','jump','nav-'+key,'secondary','pin')+
-    (near.length?button('附近吃喝','jump','food-'+key,'secondary','food'):'')+'</div>'+
-    detail(key,'详情与'+(item.photo?'拍照':'导航'),
-      (row?.note?'<p class="callout">'+escape(row.note)+'</p>':'')+
-      '<div id="nav-'+escape(key)+'">'+mapLinks(item)+'</div>'+verification(item)+
-      (countable?checkControls('places',item):'')+
-      (item.photo?photoPanel(item):'')+
-      (near.length?'<div id="food-'+escape(key)+'"><h4>附近吃喝</h4>'+near.map(entry=>foodCard(entry,key)).join('')+'</div>':''),
-      'place-detail')+'</div></article>';
+function placeCard(item) {
+  return '<article class="place-card panel"><div class="place-main"><h3>'+escape(item.name)+'</h3><p>'+escape(item.summary)+'</p>'+
+    flag(item.region)+(item.photo?'<p class="photo-preview">'+icon('camera')+' '+escape(item.photo.area)+'</p>':'')+
+    '<div class="actions">'+quickNav(item)+'</div>'+
+    detail('place-'+item.id,'详情与'+(item.photo?'拍照':'导航'),
+      mapLinks(item)+verification(item)+checkControls('places',item)+(item.photo?photoPanel(item):''),'place-detail')+'</div></article>';
 }
 
 function composition(item) {
@@ -315,38 +422,58 @@ function photoPanel(item) {
     '<form data-form="photo" data-id="'+item.id+'" class="memo"><label>私人摄影备注<textarea name="notes" rows="2" maxlength="1000" placeholder="想拍的角度或下次的想法">'+escape(saved.notes)+'</textarea></label><button class="button secondary">保存备注</button></form></section>';
 }
 
+const foodRegions = ['八市与中山路','集美学村与石鼓路','南普陀与厦大周边','鼓浪屿','幸福路与思北','其他备选'];
+const foodFilters = {all:'全部',snacks:'小吃',meal:'正餐',drinks:'奶茶咖啡',gifts:'伴手礼',saved:'已收藏',done:'已打卡'};
+function foodRegion(item, day = null) {
+  if (item.group==='集美或中山路') return day!==null && moduleAt(day).id==='arrival' ? foodRegions[0] : foodRegions[1];
+  const groups = ['八市|中山路','集美','南普陀与厦大','鼓浪屿','思北与老城'];
+  const i = groups.findIndex(group=>group.split('|').includes(item.group));
+  return foodRegions[i===-1?5:i];
+}
+function matchesFood(item,filter) {
+  const saved = checkState('food',item.id);
+  if (filter==='saved') return saved.favorite;
+  if (filter==='done') return saved.status==='done';
+  if (filter==='gifts') return item.kind==='伴手礼';
+  if (filter==='drinks') return item.kind==='饮品' || /咖啡/u.test(item.name);
+  if (filter==='meal') return item.kind==='正餐' || item.priority==='正餐备选';
+  if (filter==='snacks') return ['小吃','甜点','烘焙'].includes(item.kind);
+  return true;
+}
+
 function foodCard(item,context='food') {
-  const current = checkState('food',item.id);
-  const tag = current.favorite ? '已收藏' : item.kind;
-  return '<article class="food-card"><div class="food-top"><div><span class="fine">'+escape(item.region)+' · '+escape(tag)+'</span><h3>'+escape(item.name)+'</h3>'+
-    '<p>'+escape(item.recommended||'按现场选择')+'</p></div>'+button(icon('heart'),'favorite','food:'+item.id,'icon-button '+(current.favorite?'rose':''),'',
-      'aria-pressed="'+current.favorite+'" aria-label="'+(current.favorite?'取消':'')+'收藏美食 '+escape(item.name)+'"')+'</div>'+
-    detail(context+'-'+item.id,'地址与打卡'+(current.status==='pending'?'':' · '+statuses[current.status]),
-      '<p>'+escape(item.address||'门牌或经营点待确认，按关键词搜索。')+'</p>'+verification(item)+mapLinks(item)+checkControls('food',item),'food-detail')+'</article>';
+  const saved = checkState('food',item.id);
+  return '<article class="food-card"><div class="food-top"><div><h3>'+escape(item.name)+'</h3>'+
+    '<p>'+escape(item.recommended||'按现场选择')+'</p><small>'+escape(item.address||item.region)+'</small></div>'+
+    '<div class="food-tools">'+quickNav(item)+button('', 'favorite','food:'+item.id,'compact-icon '+(saved.favorite?'rose':''),'heart',
+      'aria-pressed="'+saved.favorite+'" aria-label="'+(saved.favorite?'取消':'')+'收藏美食 '+escape(item.name)+'"')+
+    button('', 'done','food:'+item.id,'compact-icon '+(saved.status==='done'?'success':''),'check',
+      'aria-pressed="'+(saved.status==='done')+'" aria-label="'+(saved.status==='done'?'已打卡 ':'打卡 ')+escape(item.name)+'"')+'</div></div>'+
+    detail(context+'-'+item.id,'店铺详情'+(saved.status==='skipped'?' · 已跳过':''),
+      '<p class="fine">'+escape(item.kind)+' · '+escape(item.priority)+'</p>'+verification(item)+mapLinks(item)+checkControls('food',item,true),'food-detail')+'</article>';
 }
 
 function foodView() {
-  const source = ui.foodDay==='all' ? foods() : dayFood(Number(ui.foodDay));
-  const groups = unique(source.map(item => item.group));
-  const result = source.filter(item => (ui.foodGroup==='全部'||item.group===ui.foodGroup) &&
-    (ui.foodMode!=='saved'||checkState('food',item.id).favorite) &&
-    (ui.foodMode!=='done'||checkState('food',item.id).status==='done') &&
+  const day = ui.foodDay==='all' ? null : Number(ui.foodDay);
+  const source = day===null ? foods() : dayFood(day);
+  const groups = foodRegions.filter(group=>source.some(item=>foodRegion(item,day)===group));
+  const result = source.filter(item => (ui.foodGroup==='全部'||foodRegion(item,day)===ui.foodGroup) &&
+    matchesFood(item,ui.foodMode) &&
     (item.name+item.region+item.recommended+item.address).toLowerCase().includes(ui.foodQuery.trim().toLowerCase()));
-  return heading('顺路吃喝','按附近区域挑选，到了再决定吃什么。')+
-    '<div class="chips">'+chip('全部','all',ui.foodMode==='all','foodMode')+chip('已收藏','saved',ui.foodMode==='saved','foodMode')+chip('已打卡','done',ui.foodMode==='done','foodMode')+'</div>'+
+  return heading('顺路吃喝')+
+    '<div class="chips food-filters">'+Object.entries(foodFilters).map(([id,label])=>chip(label,id,ui.foodMode===id,'foodMode')).join('')+'</div>'+
     '<form data-form="foodSearch" class="search-form"><label class="search-label">'+icon('search')+'<span class="sr-only">搜索美食</span><input type="search" name="query" placeholder="搜店名、菜品或区域" maxlength="100" value="'+escape(ui.foodQuery)+'"></label><button class="button primary">搜索</button>'+
     (ui.foodQuery?button('清除','clearSearch'):'')+'</form>'+
     '<div class="filter-fields"><label>按日期<select data-update="foodDay">'+option('all','所有日期',ui.foodDay)+
     data.itinerary.dates.map((d,i)=>option(String(i),shortDate(d)+' '+dayTitle(i),ui.foodDay)).join('')+'</select></label>'+
     '<label>按区域<select data-update="foodGroup">'+['全部',...groups].map(group=>option(group,group,ui.foodGroup)).join('')+'</select></label></div>'+
     '<div class="section-heading"><h2>'+result.length+' 条美食</h2>'+link('添加美食','#custom','text','plus')+'</div>'+
-    (result.length?groups.filter(group=>result.some(item=>item.group===group)).map(group=>'<section class="food-group"><h3>'+escape(group)+'</h3>'+
-      result.filter(item=>item.group===group).map(item=>foodCard(item)).join('')+'</section>').join(''):empty('没有符合筛选的美食。'));
+    (result.length?groups.filter(group=>result.some(item=>foodRegion(item,day)===group)).map(group=>'<section class="food-group"><h3>'+escape(group)+'</h3>'+
+      result.filter(item=>foodRegion(item,day)===group).map(item=>foodCard(item)).join('')+'</section>').join(''):empty('没有符合筛选的美食。'));
 }
 
 const mapFilters = {all:'全部',sights:'今日景点',photos:'摄影机位',food:'美食',transit:'交通',backup:'备选景点'};
 const backupIds = () => [...data.backup['old-town'],...data.backup.outer];
-const onMap = food => Boolean(food.address) || (food.kind !== '随缘' && food.kind !== '自定义' && food.region !== '按当天所在区域');
 const mapType = item => item.recommended !== undefined ? 'food' : 'place';
 
 function mapItems(day) {
@@ -357,7 +484,7 @@ function mapItems(day) {
   const optional = day===null ? backupIds() :
     unique([...backupIds().filter(id=>tripIds.includes(id)), ...(module.id==='departure'?data.itinerary.departureBackup:[])]);
   const customPoints = state.customPlaces.filter(item=>day===null||item.moduleId===module.id).map(item=>place(item.id));
-  const mapFood = (day===null?foods():dayFood(day)).filter(onMap);
+  const mapFood = day===null?foods():dayFood(day);
   const fixed = [
     ...tripIds.map(place),...customPoints,
     ...optional.filter(id=>!tripIds.includes(id)).map(place)
@@ -394,27 +521,148 @@ function regionScheme() {
     districts.map(([label,id,pos])=>button('<i aria-hidden="true"></i>'+label,'mapPick','place:'+id,'map-tag '+pos,'','aria-pressed="'+(ui.mapId==='place:'+id)+'"')).join('')+'</div>';
 }
 
+const ferryStops = new Set(['dongdu-ferry','neicuoao-ferry','sanqiutian-ferry','xiamen-ferry']);
+const mapKinds = {
+  sight:['景点','pin'],photo:['机位','camera'],food:['美食','food'],
+  transit:['交通','train'],backup:['备选','spark'],ferry:['轮渡','ferry']
+};
+let liveMap;
+let mapPositions;
+const mapViews = new Map();
+const mapKey = item => mapType(item)+':'+item.id;
+const coordinate = item => data.geo?.points[item.id];
+
+function markerKind(item) {
+  if (ferryStops.has(item.id)) return 'ferry';
+  if (['交通','住宿'].includes(item.kind)) return 'transit';
+  if (mapType(item)==='food') return 'food';
+  if (ui.mapFilter==='backup'||item.kind==='备选') return 'backup';
+  return ui.mapFilter==='photos' ? 'photo' : 'sight';
+}
+
+function mapSelection(item, popup = false) {
+  const point = coordinate(item);
+  const region = item.address || point?.address || item.region;
+  const intro = ui.mapFilter==='photos'&&item.photo ? item.photo.area : item.summary||item.recommended||'';
+  return '<h3>'+escape(item.name)+'</h3><p>'+escape(region)+(intro?' · '+escape(intro):'')+'</p>'+
+    travelInfo(item.id)+
+    (point?'<p class="fine">'+escape(point.note||'')+' '+external('点位来源',point.source,'inline-link')+'</p>':'<p class="fine">点位待定位，可按关键词查找。</p>')+
+    mapLinks(item)+
+    (popup ? '' : ((item.verification?verification(item):'')+
+      (item.photo?detail('map-photo-'+item.id,'查看摄影机位',photoPanel(item)):'')));
+}
+
 function mapView(day) {
   const rows = mapItems(day);
-  const [type,id] = ui.mapId.split(':');
-  const selected = type === 'food' ? foods().find(item=>item.id===id) : place(id);
-  return heading(day===null?'旅行总地图':'当天路线地图',day===null?'从集美到环岛路，再渡海去鼓浪屿。':escape(moduleAt(day).area))+
-    tabs(day,true)+'<section class="panel map-panel">'+section('路线示意图',flag('无比例尺'))+
-    '<p class="subtle">按区域或当天顺序排列。点击地点可打开地图查询。</p>'+
-    (day===null?regionScheme():routeScheme(day))+
-    '<p class="fine">'+icon('ferry')+' 鼓浪屿跨海段乘游客轮渡。外部导航需联网。</p>'+
-    (selected?'<article id="map-selection" tabindex="-1" class="map-selection"><h3>'+escape(selected.name)+'</h3>'+
-      '<p>'+escape(selected.address||selected.region)+' · '+escape(ui.mapFilter==='photos'&&selected.photo?selected.photo.area:selected.summary||selected.recommended||'')+'</p>'+
-      travelInfo(selected.id)+mapLinks(selected)+(selected.verification?verification(selected):'')+
-      (selected.photo?detail('map-photo-'+id,'查看摄影机位',photoPanel(selected)):'')+'</article>':'')+'</section>'+
-    '<section>'+section('地点索引',link('添加地点','#custom','text','plus'))+'<div class="chips map-chips">'+
+  return heading(day===null?'旅行总地图':'当天路线地图',day===null?'':escape(moduleAt(day).area))+
+    tabs(day,true)+'<div class="chips map-chips" aria-label="地图类别">'+
     Object.entries(mapFilters).map(([value,label])=>chip(day===null&&value==='sights'?'正式景点':label,value,ui.mapFilter===value,'mapFilter')).join('')+'</div>'+
-    '<p class="fine">'+rows.length+' 个匹配地点</p><div class="index-list">'+(rows.map(item => {
-      const byType = mapType(item);
-      const label = byType==='food'?'美食':(ui.mapFilter==='photos'?'机位':item.kind);
-      return '<div class="index-row"><div><h3>'+escape(item.name)+'</h3><p>'+escape(item.region)+' · '+escape(label)+'</p></div>'+
-        button('定位','mapPick',byType+':'+item.id,'secondary','pin','aria-label="查看 '+escape(item.name)+' 地图"')+'</div>';
-    }).join('')||empty('这个日期和类别暂时没有地点。'))+'</div></section>';
+    '<section class="panel map-panel">'+section('地理地图',button('恢复视野','mapReset','','text','','disabled'))+
+    '<div id="geo-frame" class="geo-frame" aria-label="厦门交互地图"><div id="geo-map" class="geo-map"></div>'+
+    '<p id="geo-status" class="geo-status" role="status">正在加载底图…</p></div>'+
+    '<div id="geo-fallback" class="geo-fallback" hidden><p id="geo-fallback-reason" class="fine" role="status"></p>'+
+    '<div class="actions">'+button('重试在线地图','mapRetry','','text')+'</div></div>'+
+    '<div class="geo-legend" aria-label="地图标记说明">'+Object.entries(mapKinds).map(([key,[label,glyph]])=>
+      '<span><i class="'+key+'">'+icon(glyph)+'</i>'+label+'</span>').join('')+'</div>'+
+    '<p class="fine">'+icon('ferry')+' 跨海轮渡按实际船票乘坐。地图数字为当天的行程顺序。 '+
+    external('报告底图问题','https://www.openstreetmap.org/fixthemap','inline-link')+'</p>'+
+    detail('map-schematic','离线备用 · 路线示意图（无比例尺）',day===null?regionScheme():routeScheme(day),'map-schematic')+
+    '<article id="map-selection" tabindex="-1" class="map-selection" hidden></article></section>'+
+    '<section id="map-index">'+section('地点索引',link('添加地点','#custom','text','plus'))+
+    '<p id="map-count" class="fine">'+rows.length+' 个匹配地点</p><div id="map-rows" class="index-list"></div></section>';
+}
+
+function mapIndex(day) {
+  const rows = mapItems(day);
+  const mapped = rows.filter(coordinate);
+  const pending = rows.filter(item=>!coordinate(item));
+  const list = items => items.map(item=>{
+    const point = coordinate(item);
+    const kind = markerKind(item);
+    return '<div class="index-row"><div><h3>'+escape(item.name)+'</h3><p>'+escape(item.address||point?.address||item.region)+' · '+mapKinds[kind][0]+'</p></div>'+
+      button(point?'定位':'查找','mapPick',mapKey(item),'compact-icon','pin','aria-label="查看 '+escape(item.name)+' 地图"')+'</div>';
+  }).join('');
+  document.querySelector('#map-count').textContent=rows.length+' 个地点 · '+mapped.length+' 个有点位';
+  document.querySelector('#map-rows').innerHTML=(pending.length?
+    detail('map-pending','待定位 '+pending.length+' 项 · 按关键词查找',list(pending),'pending-places'):'')+
+    (mapped.length?detail('map-mapped','有点位 '+mapped.length+' 项',list(mapped),'mapped-places'):'')+
+    (rows.length?'':empty('这个日期和类别暂时没有地点。'));
+}
+
+function showMapSelection(key, scroll = true) {
+  const [type,id] = key.split(':');
+  const item = type==='food' ? foods().find(item=>item.id===id) : data.placeById.has(id)||state.customPlaces.some(row=>row.id===id) ? place(id) : undefined;
+  const target = document.querySelector('#map-selection');
+  if (!target||!item) return;
+  target.hidden=false;
+  target.innerHTML=mapSelection(item);
+  const located = liveMap?.locate(key);
+  if (scroll) jump(located?'geo-frame':'map-selection');
+}
+
+function loadMapPositions() {
+  if (!mapPositions) {
+    mapPositions=fetch('./data/map-positions.json').then(response=>{
+      if (!response.ok) throw new Error('Map coordinates unavailable');
+      return response.json();
+    }).then(geo=>{
+      if (geo.crs!=='WGS84') throw new Error('Unexpected map coordinate system');
+      data.geo=geo;
+    }).catch(()=>{mapPositions=null;});
+  }
+  return mapPositions;
+}
+
+async function showMap() {
+  const target = document.querySelector('#geo-map');
+  const frame = document.querySelector('#geo-frame');
+  const fallbackBlock = document.querySelector('#geo-fallback');
+  const day = current.day;
+  const filter = ui.mapFilter;
+  const viewKey = day+'-'+filter;
+  mapIndex(day);
+  const fallback = reason=>{
+    frame.hidden=true;
+    fallbackBlock.hidden=false;
+    main.querySelector('[data-action=mapReset]').disabled=true;
+    fallbackBlock.querySelector('p').textContent=reason;
+    const schematic=main.querySelector('.map-schematic');
+    if (schematic) schematic.open=true;
+  };
+  if (!navigator.onLine) fallback('当前离线，已切换为路线示意图。');
+  await loadMapPositions();
+  if (!target.isConnected) return;
+  const openLists=[...main.querySelectorAll('#map-rows details[open]')].map(node=>node.dataset.detail);
+  mapIndex(day);
+  for (const name of openLists) main.querySelector('#map-rows details[data-detail="'+name+'"]').open=true;
+  if (ui.mapId) showMapSelection(ui.mapId,false);
+  if (!navigator.onLine) return;
+  if (!data.geo) {fallback('地点地图暂时不可用，已切换为路线示意图。');return;}
+
+  const rows = mapItems(day);
+  const order = day===null ? [] : unique(moduleAt(day).itinerary.map(row=>row.id));
+  const points=rows.filter(coordinate).map(item=>{
+    const kind=markerKind(item);
+    const number=order.indexOf(item.id)+1;
+    const badge = kind==='ferry' ? icon('ferry')+(number?'<small>'+number+'</small>':'') :
+      number ? String(number) : icon(mapKinds[kind][1]);
+    return {key:mapKey(item),title:item.name,kind,badge,position:coordinate(item).position,popup:mapSelection(item,true)};
+  });
+  const ferryModule = day===null ? moduleAt(state.order.indexOf('gulangyu')+1) : moduleAt(day);
+  const ferryEdges=['all','transit'].includes(filter) ? ferryModule.ferryEdges??[] : [];
+  const ferries=ferryEdges.map(edge=>data.geo.ferries[edge.join(':')]).filter(Boolean);
+  liveMap=mountGeoMap({
+    target,points,ferries,savedView:mapViews.get(viewKey),
+    extent:order.map(id=>data.geo.points[id]?.position).filter(Boolean),
+    onView:position=>mapViews.set(viewKey,position),
+    onReady:()=>{
+      main.querySelector('[data-action=mapReset]').disabled=false;
+      if (ui.mapId) liveMap?.locate(ui.mapId);
+    },
+    onFallback:()=>{
+      if (target.isConnected) fallback(navigator.onLine?'在线底图暂时不可用，已切换为路线示意图。':'当前离线，已切换为路线示意图。');
+    }
+  });
 }
 
 const myPages = [
@@ -508,31 +756,88 @@ function adjustment() {
     '<div class="actions"><button class="button primary">交换日期</button>'+button('恢复原始行程','restoreOrder')+'</div></form>';
 }
 
+const fixedCosts = [
+  {category:'高铁',reference:'往返高铁'},
+  {category:'酒店',reference:'酒店四晚'},
+  {category:'轮渡',reference:'鼓浪屿船票'},
+  {category:'门票',reference:'景区门票'}
+];
+const expenseGroups = {
+  '餐饮':['正餐','小吃','奶茶与咖啡'],
+  '市内交通':['打车','地铁','轮渡'],
+  '高铁与住宿':['高铁','酒店'],
+  '门票与其他':['门票','特产','购物','纪念日','其他']
+};
+const expenseAmount = (value = '') => field('金额（元）','amount',value,'type="number" min=".01" max="10000000" step=".01" inputmode="decimal" required');
+
+function expenseCategories(current = '') {
+  return '<label>分类<select name="category" required>'+option('','选择分类',current)+
+    data.budget.categories.map(value=>option(value,value,current)).join('')+'</select></label>';
+}
+
+function quickExpenseForm(today) {
+  return '<form id="quick-expense" class="panel form-grid quick-expense" data-form="expense" data-quick="true">'+section('快捷记账')+
+    '<div class="form-columns">'+expenseCategories()+expenseAmount()+'</div>'+
+    '<div class="field-line">'+field('日期','date',today,'type="date" required')+
+    '<button class="button primary">保存支出</button></div>'+
+    detail('quick-fields','更多选填项',
+      '<div class="form-grid">'+field('店铺或事项（选填）','title','','maxlength="120"')+
+      field('付款人昵称（选填）','payer','','maxlength="60" autocomplete="off"')+
+      '<label>备注<textarea name="notes" maxlength="500" rows="2"></textarea></label>'+
+      '<label class="tick"><input name="shared" type="checkbox" checked> 两人共同支出</label></div>')+'</form>';
+}
+
 function budget() {
   const refs = data.budget.references;
-  const subtotal = refs.reduce((sum,ref)=>sum+(ref.amount??0),0);
-  const spent = calculate(state.expenses);
+  const subtotal = refs.reduce((sum,ref)=>sum+toCents(ref.amount??0),0);
+  const today = localDate();
+  const spent = expenseCents(state.expenses);
   const budgetTotal = state.total;
-  const balance = budgetTotal === null ? null : (Math.round(budgetTotal*100)-Math.round(spent*100))/100;
+  const balance = budgetBalance();
+  const remainingDays = data.itinerary.dates.filter(day=>day>=today).length;
+  const average = balance===null||!remainingDays ? null : Math.floor(Math.max(0,balance)/remainingDays);
+  const format = cents => cents===null?'—':centMoney(cents);
+  const categoryTotal = categories => expenseCents(state.expenses.filter(item=>categories.includes(item.category)));
+  const fixed = fixedCosts.map(({category,reference})=>{
+    const quoted = refs.find(ref=>ref.name===reference)?.amount;
+    const paid = categoryTotal([category]);
+    return {category,paid,estimate:quoted==null?null:Math.max(0,toCents(quoted)-paid)};
+  });
+  const fixedPaid = fixed.reduce((sum,row)=>sum+row.paid,0);
+  const fixedRemaining = fixed.reduce((sum,row)=>sum+(row.estimate??0),0);
   const days = unique([...data.itinerary.dates,...state.expenses.map(item=>item.date)]).sort();
   const edit = state.expenses.find(item=>item.id===ui.editExpense);
   const dated = (ui.budgetDay==='all'?state.expenses:state.expenses.filter(item=>item.date===ui.budgetDay)).slice().sort((a,b)=>b.date.localeCompare(a.date));
-  const categoryTotals=data.budget.categories.map(name=>[name,calculate(state.expenses.filter(item=>item.category===name))]).filter(([,sum])=>sum>0).sort((a,b)=>b[1]-a[1]);
-  const dateDefault = ui.budgetDay==='all'?(data.itinerary.dates.includes(localDate())?localDate():data.itinerary.dates[0]):ui.budgetDay;
-  return heading('旅行预算','两人账本。旧版预估供参考，实际支出从零开始记录。',true)+
-    '<section class="panel budget-hero"><div class="budget-summary"><div><span>实际累计支出</span><strong>'+money(spent)+'</strong></div><div><span>人均实际支出</span><strong>'+money(spent/2)+'</strong></div>'+
-    '<div><span>总预算</span><strong>'+(budgetTotal===null?'待设置':money(budgetTotal))+'</strong></div><div><span>'+((balance??0)<0?'已超预算':'剩余预算')+
-    '</span><strong>'+(balance===null?'待设置':money(Math.abs(balance)))+'</strong></div></div>'+
-    (budgetTotal===null?'':progress(Math.min(spent,budgetTotal),budgetTotal,'总预算已使用')+'<p class="fine">已使用 '+(budgetTotal===0?(spent===0?'0%':'超出零元预算'):Math.round(spent/budgetTotal*100)+'%')+'</p>')+
-    '<form class="field-line" data-form="budgetTotal">'+field('设置总预算（元）','amount',budgetTotal??'','type="number" min="0" max="10000000" step=".01" inputmode="decimal" placeholder="留空表示待设置"')+
-    '<button class="button secondary">保存</button></form></section>'+
-    '<section class="panel">'+section('已知预算参考小计',flag(money(subtotal),'core'))+'<p class="fine">未确定的交通、轮渡、门票和纪念日额外支出未计入。</p>'+
+  const categoryTotals = data.budget.categories.map(name=>[name,categoryTotal([name])]).filter(([,sum])=>sum>0).sort((a,b)=>b[1]-a[1]);
+  return heading('旅行预算','',true)+
+    '<section class="panel budget-hero"><div class="budget-summary">'+
+    '<div><span>'+((balance??0)<0?'已超预算':'剩余预算')+'</span><strong>'+(balance===null?'待设置':centMoney(Math.abs(balance)))+'</strong></div>'+
+    '<div><span>今日消费</span><strong>'+centMoney(expenseCents(state.expenses.filter(item=>item.date===today)))+'</strong></div>'+
+    '<div><span>日均剩余可用</span><strong>'+format(average)+'</strong></div>'+
+    '<div><span>总预算</span><strong>'+(budgetTotal===null?'待设置':money(budgetTotal))+'</strong></div>'+
+    '<div><span>实际累计支出</span><strong>'+centMoney(spent)+'</strong></div>'+
+    '<div><span>人均实际支出</span><strong>'+centMoney(Math.round(spent/2))+'</strong></div></div>'+
+    '<p class="fine">'+(remainingDays?'余 '+remainingDays+' 个旅行日 · 日均仅供参考':'旅行日期已结束')+'</p>'+
+    (budgetTotal===null?'':progress(Math.min(spent,toCents(budgetTotal)),toCents(budgetTotal),'总预算已使用')+
+      '<p class="fine">已使用 '+(budgetTotal===0?(spent===0?'0%':'超出零元预算'):Math.round(spent/toCents(budgetTotal)*100)+'%')+'</p>')+
+    '<div class="actions">'+button('快捷记账','jump','quick-expense','primary','plus')+
+    button('完整记账','jump','expense-form','secondary','list')+'</div>'+
+    detail('budget-total','编辑总预算','<form class="field-line" data-form="budgetTotal">'+
+      field('设置总预算（元）','amount',budgetTotal??'','type="number" min="0" max="10000000" step=".01" inputmode="decimal" placeholder="留空表示待设置"')+
+      '<button class="button secondary">保存</button></form>')+'</section>'+
+    quickExpenseForm(today)+
+    '<section class="panel cost-panel">'+section('旅行固定成本')+
+    '<div class="budget-summary"><div><span>已支付（按记账）</span><strong>'+centMoney(fixedPaid)+'</strong></div>'+
+    '<div><span>尚未支付的已知预估</span><strong>'+centMoney(fixedRemaining)+'</strong></div></div>'+
+    '<p class="fine">按类别从原预估扣除已记支出。轮渡、门票等未设预估的项目单独标明。</p>'+
+    detail('fixed-costs','查看固定成本明细',fixed.map(row=>'<div class="index-row"><span>'+row.category+'</span><span>已记 '+centMoney(row.paid)+
+      ' · 余估 '+(row.estimate===null?'待确认':centMoney(row.estimate))+'</span></div>').join(''))+'</section>'+
+    '<section class="panel">'+section('已知预算参考小计',flag(centMoney(subtotal),'core'))+
     detail('budget-reference','看预估明细',refs.map(ref=>'<div class="index-row"><span>'+escape(ref.name)+(ref.detail?' <small>'+escape(ref.detail)+'</small>':'')+'</span><strong>'+ (ref.amount===null?'待填写':money(ref.amount))+'</strong></div>').join(''))+'</section>'+
-    '<form id="expense-form" class="panel form-grid" data-form="expense" data-id="'+(edit?.id??'')+'">'+section(edit?'修改支出':'记一笔支出')+
-    '<div class="form-columns">'+field('日期','date',edit?.date??dateDefault,'type="date" required')+
-    field('金额（元）','amount',edit?.amount??'','type="number" min=".01" max="10000000" step=".01" inputmode="decimal" required')+'</div>'+
-    '<label>类别<select name="category">'+data.budget.categories.map(value=>option(value,value,edit?.category??'正餐')).join('')+'</select></label>'+
-    field('店铺或事项','title',edit?.title??'','maxlength="120" required')+
+    '<form id="expense-form" class="panel form-grid" data-form="expense" data-id="'+(edit?.id??'')+'">'+section(edit?'修改支出':'完整记账')+
+    '<div class="form-columns">'+field('日期','date',edit?.date??(ui.budgetDay==='all'?today:ui.budgetDay),'type="date" required')+
+    expenseAmount(edit?.amount??'')+'</div>'+expenseCategories(edit?.category??'正餐')+
+    field('店铺或事项', 'title',edit?.title??'','maxlength="120" required')+
     field('付款人昵称（选填）','payer',edit?.payer??'','maxlength="60" autocomplete="off"')+
     '<label>备注<textarea name="notes" maxlength="500" rows="2">'+escape(edit?.notes??'')+'</textarea></label>'+
     '<label class="tick"><input name="shared" type="checkbox"'+(!edit||edit.shared?' checked':'')+'> 两人共同支出</label>'+
@@ -545,7 +850,9 @@ function budget() {
       '<div class="actions">'+button('修改','editExpense',item.id,'text')+button('删除','deleteExpense',item.id,'text danger')+'</div></article>').join('')||empty('所选日期还没有账单。'))+
     detail('daily-expenses','查看每天合计',days.map(day=>'<div class="index-row"><span>'+escape(day)+'</span><strong>'+money(calculate(state.expenses.filter(item=>item.date===day)))+'</strong></div>').join(''))+
     '<div class="actions">'+button('导出 CSV','exportCsv','','secondary','download')+button('导出 JSON 账单','exportExpenses','','secondary','download')+'</div></section>'+
-    '<section class="panel">'+section('各类支出占比')+(categoryTotals.map(([name,value])=>'<div class="budget-category"><div><span>'+escape(name)+'</span><strong>'+money(value)+
+    '<section class="panel">'+section('分类统计')+
+    Object.entries(expenseGroups).map(([name,categories])=>'<div class="index-row"><span>'+name+'</span><strong>'+centMoney(categoryTotal(categories))+'</strong></div>').join('')+
+    detail('budget-categories','查看各类支出占比',categoryTotals.map(([name,value])=>'<div class="budget-category"><div><span>'+escape(name)+'</span><strong>'+money(value)+
       ' · '+Math.round(value/spent*100)+'%</strong></div>'+progress(value,spent,name+'支出占比')+'</div>').join('')||empty('记录支出后显示。'))+'</section>';
 }
 
@@ -560,8 +867,10 @@ function records() {
 
 function offline() {
   return heading('离线与主屏幕','出发前用 Safari 成功打开一次，等待离线素材准备完成。',true)+
-    '<section class="panel">'+section('离线状态')+'<p id="offline-status">'+(loadedOffline?'核心行程已缓存，可离线查看。':'正在检查缓存。如长期未就绪，请联网后重新打开。')+'</p>'+
-    '<p class="subtle">本地行程、图片、打卡和预算可离线使用。地图导航、外链和实时营业信息需要联网。清除网站数据后需重新缓存。</p></section>'+
+    '<section class="panel">'+section('离线状态',flag('V2.0','core'))+'<p id="offline-status">'+(loadedOffline?'核心行程已缓存，可离线查看。':'正在检查缓存。如长期未就绪，请联网后重新打开。')+'</p>'+
+    '<p class="subtle">本地行程、图片、打卡和预算可离线使用。在线底图、地图导航及外链需要联网。断网时会显示路线示意图。</p></section>'+
+    '<section class="panel">'+section('安全更新')+'<p>联网打开一次后，关闭所有打开本站的标签页或主屏幕窗口，再重新打开。看到更新提示时，请先保存表单内容。</p>'+
+    '<p class="fine">更新会沿用现有记录。可先导出备份，更新时无需清除 Safari 网站数据。</p>'+link('导出备份','#records','text','download')+'</section>'+
     '<section class="panel">'+section('添加到 iPhone 主屏幕')+'<ol><li>在 Safari 打开本页。</li><li>点分享，选择「添加到主屏幕」。</li><li>确认名称并点「添加」，再从主屏幕打开一次检查离线状态。</li></ol>'+
     '<p class="subtle">不同浏览器和独立主屏幕应用可能分别保存记录。切换使用方式前可先导出备份。</p></section>';
 }
@@ -588,13 +897,18 @@ function render(keepDetails=false) {
   const focusable = held?.matches('button[data-action], select[data-update]') ? held : null;
   const focusKey = focusable ? Object.entries(focusable.dataset) : [];
   const focusContext = focusable?.closest('details')?.dataset.detail;
+  liveMap?.destroy();
+  liveMap=undefined;
   main.innerHTML=(storageFailure?'<p class="callout">无法读取原有的本地数据。检查 Safari 的站点存储，或从备份恢复。</p>':'')+views[current.page](current.day);
-  for (const node of main.querySelectorAll('details')) node.open=open.has(node.dataset.detail);
+  for (const node of main.querySelectorAll('details')) {
+    node.open=open.has(node.dataset.detail) || (ui.timeline==='detail' && node.classList.contains('stop-detail'));
+  }
   if (focusable) {
     const replacement = [...main.querySelectorAll(focusable.matches('button')?'button[data-action]':'select[data-update]')]
       .find(node=>node.closest('details')?.dataset.detail===focusContext&&focusKey.every(([key,value])=>node.dataset[key]===value));
     replacement?.focus({preventScroll:true});
   }
+  if (current.page==='map') showMap();
   const active = ['home','trip','map','food'].includes(current.page)?current.page:'me';
   navigation.innerHTML=[
     ['home','首页','home'],['trip','行程','itinerary'],['map','地图','map'],['food','美食','food'],['me','我的','user']
@@ -606,14 +920,14 @@ function render(keepDetails=false) {
 function changeRoute() {
   const next=route();
   if (current?.page!==next.page||current?.day!==next.day) {
-    if (next.page==='trip') ui.timeline='core';
+    if (next.page==='trip') ui.timeline='compact';
     if (next.page==='map'&&current?.page==='map') { ui.mapId=''; ui.mapFilter='all'; }
   }
   current=next;
   render();
   window.scrollTo(0,0);
   main.focus({preventScroll:true});
-  if (current.page==='map'&&ui.mapId) jump('map-selection');
+  if (current.stop) jump('stop-'+current.stop);
 }
 
 function jump(id) {
@@ -665,11 +979,17 @@ function updatePhoto(id,update) {
 
 const actions = {
   jump, copy:copyText,
-  timeline(value) { ui.timeline=value; render(true); },
+  timeline(value) {
+    ui.timeline=value;
+    if (value==='compact') main.querySelectorAll('.stop-detail').forEach(node=>{node.open=false;});
+    render(true);
+  },
   foodMode(value) { ui.foodMode=value; render(true); },
   clearSearch() { ui.foodQuery=''; render(true); main.querySelector('input[type=search]').focus(); },
   mapFilter(value) { ui.mapFilter=value; ui.mapId=''; render(true); },
-  mapPick(value) { ui.mapId=value; render(true); jump('map-selection'); },
+  mapPick(value) { ui.mapId=value; showMapSelection(value); },
+  mapReset() { liveMap?.reset(); },
+  mapRetry() { render(true); },
   openMap(value) { ui.mapId=value; ui.mapFilter='all'; location.hash='map'; },
   done(value) {
     const [type,id]=value.split(':');
@@ -706,8 +1026,14 @@ const actions = {
     })) render(true);
   },
   export() {
-    download('厦门纪行-旅行备份.json',JSON.stringify(state,null,2),'application/json');
-    showNotice('旅行备份已导出');
+    try {
+      const contents=storageFailure?localStorage.getItem(storageKey):JSON.stringify(state,null,2);
+      if (!contents) throw new Error('No record available');
+      download('厦门纪行-旅行备份.json',contents,'application/json');
+      showNotice('旅行备份已导出');
+    } catch {
+      showNotice('当前无法读取旅行数据，请检查 Safari 存储设置');
+    }
   },
   exportCsv() { download('厦门纪行-账单.csv',csv(state.expenses),'text/csv;charset=utf-8'); },
   exportExpenses() { download('厦门纪行-账单.json',JSON.stringify(state.expenses,null,2),'application/json'); },
@@ -803,9 +1129,10 @@ const submit = {
     }
   },
   expense(form,h,formData) {
-    if (!h('title')) {showNotice('请填写店铺或事项');return;}
+    const title=h('title') || (form.dataset.quick ? h('category') : '');
+    if (!title) {showNotice('请填写店铺或事项');return;}
     const prior=form.dataset.id;
-    const item={id:prior||crypto.randomUUID(),date:h('date'),amount:Number(h('amount')),category:h('category'),title:h('title'),
+    const item={id:prior||crypto.randomUUID(),date:h('date'),amount:Number(h('amount')),category:h('category'),title,
       notes:h('notes'),shared:formData.has('shared'),payer:h('payer')};
     if (mutate(next=>{
       if (prior) next.expenses=next.expenses.map(entry=>entry.id===prior?item:entry);
@@ -839,16 +1166,34 @@ async function loadData() {
   return {itinerary,places,food,budget,backup,modules:new Map(itinerary.modules.map(m=>[m.id,m])),placeById:new Map(places.map(p=>[p.id,p]))};
 }
 
-function readyOffline() {
+async function readyOffline() {
   if (!('serviceWorker' in navigator)) return;
-  navigator.serviceWorker.register('./sw.js').then(()=>navigator.serviceWorker.ready).then(()=>{
+  try {
+    const registration=await navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'});
+    const banner=document.querySelector('#update-banner');
+    const showUpdate=()=>{
+      if (registration.waiting&&navigator.serviceWorker.controller) banner.hidden=false;
+    };
+    let requested=false;
+    document.querySelector('#activate-update').addEventListener('click',()=>{
+      if (!registration.waiting) return;
+      requested=true;
+      registration.waiting.postMessage({type:'ACTIVATE_UPDATE'});
+    });
+    navigator.serviceWorker.addEventListener('controllerchange',()=>{if(requested) location.reload();});
+    registration.addEventListener('updatefound',()=>{
+      const worker=registration.installing;
+      worker?.addEventListener('statechange',()=>{if(worker.state==='installed') showUpdate();});
+    });
+    showUpdate();
+    await navigator.serviceWorker.ready;
     loadedOffline=true;
     const status=document.querySelector('#offline-status');
     if (status) status.textContent='核心行程已缓存，可离线查看。';
-  }).catch(()=>{
+  } catch {
     const status=document.querySelector('#offline-status');
     if (status) status.textContent='离线缓存未就绪，联网后可重试。';
-  });
+  }
 }
 
 async function initialize() {
@@ -864,6 +1209,7 @@ async function initialize() {
   } catch { storageFailure=true; }
   current=route();
   render();
+  if (current.stop) jump('stop-'+current.stop);
   window.addEventListener('hashchange',changeRoute);
   window.addEventListener('storage',event=>{
     if (event.key!==storageKey&&event.key!==null) return;
@@ -871,6 +1217,7 @@ async function initialize() {
       const next=event.newValue?JSON.parse(event.newValue):emptyState();
       if (validateState(next,data)) {
         state=next;
+        storageFailure=false;
         render(true);
       }
     } catch {

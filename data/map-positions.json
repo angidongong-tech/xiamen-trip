@@ -1,0 +1,802 @@
+{
+  "crs": "WGS84",
+  "checkedOn": "2026-11-26",
+  "points": {
+    "xiamen-station": {
+      "position": [
+        24.4703638,
+        118.1111157
+      ],
+      "source": "https://www.openstreetmap.org/way/164551392"
+    },
+    "xiamen-north": {
+      "position": [
+        24.6388527,
+        118.0690464
+      ],
+      "source": "https://www.openstreetmap.org/way/243013878",
+      "note": "以高铁站站房为参考"
+    },
+    "bashi": {
+      "position": [
+        24.4609565,
+        118.0697108
+      ],
+      "source": "https://www.openstreetmap.org/node/10106607048",
+      "note": "地图名称为第八市场"
+    },
+    "kaihe-road": {
+      "position": [
+        24.4611839,
+        118.0698939
+      ],
+      "source": "https://www.openstreetmap.org/way/106280928",
+      "note": "标记为街段中心"
+    },
+    "yingping-road": {
+      "position": [
+        24.4606408,
+        118.0710165
+      ],
+      "source": "https://www.openstreetmap.org/way/170666758",
+      "note": "标记为街段中心"
+    },
+    "zhongshan-road": {
+      "position": [
+        24.4565362,
+        118.0746768
+      ],
+      "source": "https://www.openstreetmap.org/way/127162549",
+      "note": "标记为步行街路段中心"
+    },
+    "china-city": {
+      "position": [
+        24.4561844,
+        118.0772553
+      ],
+      "source": "https://www.openstreetmap.org/way/1248805618",
+      "note": "北区位置参考"
+    },
+    "qingshui-palace": {
+      "position": [
+        24.531551,
+        118.1086168
+      ],
+      "source": "https://www.openstreetmap.org/node/13255980448",
+      "note": "清水宫位置参考，机位需现场确认"
+    },
+    "jimei-village": {
+      "position": [
+        24.5665815,
+        118.0873516
+      ],
+      "source": "https://www.openstreetmap.org/node/8913407517",
+      "note": "以集美学村地铁站作为片区到访参考"
+    },
+    "jimei-dragon-boat-pool": {
+      "position": [
+        24.5689925,
+        118.0932597
+      ],
+      "source": "https://www.openstreetmap.org/way/334445860",
+      "note": "龙舟池中池位置参考，沿公共步道游览"
+    },
+    "nanxun-lou": {
+      "position": [
+        24.567782,
+        118.0983383
+      ],
+      "source": "https://www.openstreetmap.org/way/1072488134",
+      "note": "以南薰楼为参考，公共步道观察建筑外观"
+    },
+    "jiageng-park": {
+      "position": [
+        24.5711848,
+        118.1030464
+      ],
+      "source": "https://www.openstreetmap.org/way/334935406"
+    },
+    "aoyuan": {
+      "position": [
+        24.5677125,
+        118.1024316
+      ],
+      "source": "https://www.openstreetmap.org/node/6325812977",
+      "note": "以鳌园内陈嘉庚墓为参考，入园从景区入口"
+    },
+    "jimei-dashe": {
+      "position": [
+        24.5716772,
+        118.0998695
+      ],
+      "source": "https://www.openstreetmap.org/node/10272465799",
+      "note": "集美大社片区参考"
+    },
+    "shigu-road": {
+      "position": [
+        24.5760717,
+        118.0934785
+      ],
+      "source": "https://www.openstreetmap.org/way/148548571",
+      "note": "标记为街段中心"
+    },
+    "haidi-road": {
+      "position": [
+        24.5648236,
+        118.0892901
+      ],
+      "source": "https://www.openstreetmap.org/way/624962331",
+      "note": "标记为集美学村站南侧的海堤路段参考，请走公共步道"
+    },
+    "shapowei-art": {
+      "position": [
+        24.4401839,
+        118.0824698
+      ],
+      "source": "https://www.openstreetmap.org/way/366252362"
+    },
+    "nanputuo": {
+      "position": [
+        24.4436179,
+        118.0916383
+      ],
+      "source": "https://www.openstreetmap.org/way/151181439",
+      "note": "寺院范围参考，按预约指引进入"
+    },
+    "yanwu-platform": {
+      "position": [
+        24.4351486,
+        118.084217
+      ],
+      "source": "https://www.openstreetmap.org/node/4812732436",
+      "note": "OSM 标为临海观景台，从公开步行入口进入"
+    },
+    "baicheng-beach": {
+      "position": [
+        24.4333336,
+        118.0979203
+      ],
+      "source": "https://www.openstreetmap.org/way/164688343",
+      "note": "沙滩范围参考"
+    },
+    "hulishan-fort": {
+      "position": [
+        24.4315407,
+        118.1015818
+      ],
+      "source": "https://www.openstreetmap.org/node/3126479317"
+    },
+    "pearl-bay": {
+      "position": [
+        24.4303383,
+        118.1064715
+      ],
+      "source": "https://www.openstreetmap.org/relation/18283072",
+      "note": "沙滩范围参考"
+    },
+    "zengcuoan": {
+      "position": [
+        24.4291533,
+        118.1204701
+      ],
+      "source": "https://www.openstreetmap.org/node/4601158125",
+      "note": "曾厝垵社区参考"
+    },
+    "tianquan-square": {
+      "position": [
+        24.4270875,
+        118.1264036
+      ],
+      "source": "https://www.openstreetmap.org/node/12229874412"
+    },
+    "pangui-tower": {
+      "position": [
+        24.4262599,
+        118.1319182
+      ],
+      "source": "https://www.openstreetmap.org/node/12229874411"
+    },
+    "xitouxia": {
+      "position": [
+        24.4314625,
+        118.1355906
+      ],
+      "source": "https://www.openstreetmap.org/node/1408154142",
+      "note": "沿海片区参考"
+    },
+    "haiyuntai": {
+      "position": [
+        24.436239,
+        118.1435717
+      ],
+      "source": "https://www.openstreetmap.org/node/12457440221",
+      "note": "以海韵台公交站作附近步道参考"
+    },
+    "buzai-bookstore": {
+      "position": [
+        24.438748,
+        118.1475977
+      ],
+      "source": "https://www.openstreetmap.org/node/12214162807",
+      "note": "黄厝沿海分店点位，当日营业另查"
+    },
+    "huangcuo-beach": {
+      "position": [
+        24.4444107,
+        118.1571698
+      ],
+      "source": "https://www.openstreetmap.org/way/279531052",
+      "note": "沙滩范围参考，按现场开放入口到达"
+    },
+    "yefengzhai": {
+      "position": [
+        24.4505928,
+        118.1634767
+      ],
+      "source": "https://www.openstreetmap.org/relation/3742160",
+      "note": "以椰风寨公交站为入口附近参考"
+    },
+    "dongdu-ferry": {
+      "position": [
+        24.4829013,
+        118.0697575
+      ],
+      "source": "https://www.openstreetmap.org/node/6855784025",
+      "note": "厦鼓码头位置，按船票检票信息到港"
+    },
+    "xiamen-ferry": {
+      "position": [
+        24.4573677,
+        118.0682061
+      ],
+      "source": "https://www.openstreetmap.org/way/732161916"
+    },
+    "neicuoao-ferry": {
+      "position": [
+        24.4490662,
+        118.0537066
+      ],
+      "source": "https://www.openstreetmap.org/relation/9964493"
+    },
+    "sanqiutian-ferry": {
+      "position": [
+        24.4528418,
+        118.0647484
+      ],
+      "source": "https://www.openstreetmap.org/relation/9964491"
+    },
+    "luchao-art-school": {
+      "position": [
+        24.4480155,
+        118.0550396
+      ],
+      "source": "https://www.openstreetmap.org/node/6950414287",
+      "note": "OSM 标为福州大学厦门工艺美术学院旧址，门牌151号"
+    },
+    "sunlight-rock": {
+      "position": [
+        24.4446321,
+        118.0622567
+      ],
+      "source": "https://www.openstreetmap.org/node/1762860367",
+      "note": "观景区位置参考"
+    },
+    "gangzaihou-beach": {
+      "position": [
+        24.4419168,
+        118.0614754
+      ],
+      "source": "https://www.openstreetmap.org/way/164687749",
+      "note": "沙滩范围参考"
+    },
+    "shuzhuang-garden": {
+      "position": [
+        24.4416815,
+        118.0645146
+      ],
+      "source": "https://www.openstreetmap.org/way/1526681210",
+      "note": "花园范围参考"
+    },
+    "bagua-organ-museum": {
+      "position": [
+        24.4501268,
+        118.0632433
+      ],
+      "source": "https://www.openstreetmap.org/way/164652578",
+      "note": "八卦楼场馆，区别于管风琴艺术中心"
+    },
+    "pipe-organ-center": {
+      "position": [
+        24.4510653,
+        118.0638624
+      ],
+      "source": "https://www.openstreetmap.org/way/642501167"
+    },
+    "longtou-road": {
+      "position": [
+        24.4474221,
+        118.067145
+      ],
+      "source": "https://www.openstreetmap.org/way/164652576",
+      "note": "标记为步行街路段中心"
+    },
+    "xian-flower-market": {
+      "position": [
+        24.4642623,
+        118.086365
+      ],
+      "source": "https://www.openstreetmap.org/way/1248809861"
+    },
+    "park-west-road": {
+      "position": [
+        24.4615805,
+        118.0834576
+      ],
+      "source": "https://www.openstreetmap.org/way/106280899",
+      "note": "标记为街段中心"
+    },
+    "huaxin-road": {
+      "position": [
+        24.4627462,
+        118.0829863
+      ],
+      "source": "https://www.openstreetmap.org/way/191918201",
+      "note": "标记为街段中心"
+    },
+    "xingfu-road": {
+      "position": [
+        24.462893,
+        118.081041
+      ],
+      "source": "https://www.openstreetmap.org/way/191918219",
+      "note": "标记为街段中心"
+    },
+    "gugong-road": {
+      "position": [
+        24.4618528,
+        118.0791799
+      ],
+      "source": "https://www.openstreetmap.org/way/653035856",
+      "note": "标记为幸福路一带街段中心"
+    },
+    "sibei": {
+      "position": [
+        24.4629398,
+        118.0755444
+      ],
+      "source": "https://www.openstreetmap.org/relation/2328475",
+      "note": "以思北 BRT 站为片区参考"
+    },
+    "zhongshan-park": {
+      "position": [
+        24.4615606,
+        118.0850755
+      ],
+      "source": "https://www.openstreetmap.org/way/167145870"
+    },
+    "bailuzhou-park": {
+      "position": [
+        24.4776488,
+        118.0869938
+      ],
+      "source": "https://www.openstreetmap.org/relation/17975677",
+      "note": "公园范围参考"
+    },
+    "yundang-lake": {
+      "position": [
+        24.4847864,
+        118.0999034
+      ],
+      "source": "https://www.openstreetmap.org/relation/3243088",
+      "note": "湖区参考"
+    },
+    "botanical-garden": {
+      "position": [
+        24.4565865,
+        118.0891477
+      ],
+      "source": "https://www.openstreetmap.org/node/4780427277",
+      "note": "以游客服务中心为参考"
+    },
+    "zhonggu-cableway": {
+      "position": [
+        24.4510265,
+        118.0896005
+      ],
+      "source": "https://www.openstreetmap.org/way/308159963",
+      "note": "索道线中点仅作范围参考，乘坐请按售票点关键词查找"
+    },
+    "railway-park": {
+      "position": [
+        24.4566631,
+        118.0889442
+      ],
+      "source": "https://www.openstreetmap.org/node/4063521861",
+      "note": "以地图标注的步道观景点为参考"
+    },
+    "sm-mall": {
+      "position": [
+        24.5034483,
+        118.1211797
+      ],
+      "source": "https://www.openstreetmap.org/way/1335941910"
+    },
+    "haicang-bay": {
+      "position": [
+        24.490949,
+        118.0497565
+      ],
+      "source": "https://www.openstreetmap.org/way/472084991",
+      "note": "公园北段范围参考"
+    },
+    "old-courtyard": {
+      "position": [
+        24.6274766,
+        118.0709419
+      ],
+      "source": "https://www.openstreetmap.org/node/11283651913",
+      "note": "以景区游客中心为参考"
+    },
+    "shangqing-seafood": {
+      "position": [
+        24.4618645,
+        118.0696372
+      ],
+      "source": "https://www.openstreetmap.org/node/8772407473",
+      "note": "店铺位置来源于 OSM，营业时间出发前核对"
+    },
+    "huang-peanut": {
+      "position": [
+        24.4559945,
+        118.0710863
+      ],
+      "source": "https://www.openstreetmap.org/node/5275085628",
+      "address": "中山路 Zhongshan Road22;20",
+      "note": "OSM 标为黄则和花生汤"
+    },
+    "buzai-drinks": {
+      "position": [
+        24.438748,
+        118.1475977
+      ],
+      "source": "https://www.openstreetmap.org/node/12214162807",
+      "note": "与黄厝沿海书店同址，饮品供应出发前核对"
+    },
+    "yeshi-mochi": {
+      "position": [
+        24.4468197,
+        118.0662291
+      ],
+      "source": "https://www.openstreetmap.org/node/5307665322",
+      "note": "OSM 名称写作叶氏麻籽，仍以现场摊点为准"
+    }
+  },
+  "ferries": {
+    "dongdu-ferry:sanqiutian-ferry": {
+      "positionSource": "https://www.openstreetmap.org/way/732161922",
+      "label": "东渡厦鼓码头 → 三丘田 · 游客轮渡",
+      "positions": [
+        [
+          24.482734,
+          118.069753
+        ],
+        [
+          24.4825986,
+          118.069028
+        ],
+        [
+          24.4824467,
+          118.0685438
+        ],
+        [
+          24.4822764,
+          118.0681267
+        ],
+        [
+          24.4820567,
+          118.0677137
+        ],
+        [
+          24.4817953,
+          118.0674217
+        ],
+        [
+          24.4814611,
+          118.0671611
+        ],
+        [
+          24.4811618,
+          118.0669823
+        ],
+        [
+          24.480636,
+          118.0667159
+        ],
+        [
+          24.4795131,
+          118.0662438
+        ],
+        [
+          24.472795,
+          118.0634972
+        ],
+        [
+          24.470217,
+          118.0625746
+        ],
+        [
+          24.4695666,
+          118.0623435
+        ],
+        [
+          24.4684299,
+          118.0620446
+        ],
+        [
+          24.4674854,
+          118.061837
+        ],
+        [
+          24.4663819,
+          118.0616867
+        ],
+        [
+          24.4649929,
+          118.0616789
+        ],
+        [
+          24.4638986,
+          118.0617757
+        ],
+        [
+          24.4627686,
+          118.061955
+        ],
+        [
+          24.4614814,
+          118.0622006
+        ],
+        [
+          24.4604639,
+          118.0624378
+        ],
+        [
+          24.4594252,
+          118.0627805
+        ],
+        [
+          24.4581527,
+          118.0633263
+        ],
+        [
+          24.4561277,
+          118.0643797
+        ],
+        [
+          24.4549362,
+          118.0650878
+        ],
+        [
+          24.454614,
+          118.0652916
+        ],
+        [
+          24.4542929,
+          118.0654512
+        ],
+        [
+          24.4540304,
+          118.0655572
+        ],
+        [
+          24.4538171,
+          118.0655763
+        ],
+        [
+          24.4535843,
+          118.0655632
+        ],
+        [
+          24.4533639,
+          118.065504
+        ],
+        [
+          24.4532142,
+          118.0654025
+        ],
+        [
+          24.4531386,
+          118.0653229
+        ],
+        [
+          24.4530772,
+          118.0652388
+        ]
+      ]
+    },
+    "dongdu-ferry:neicuoao-ferry": {
+      "positionSource": "https://www.openstreetmap.org/way/732161923",
+      "label": "东渡厦鼓码头 → 内厝澳 · 游客轮渡",
+      "positions": [
+        [
+          24.4828557,
+          118.0697183
+        ],
+        [
+          24.482706,
+          118.0688938
+        ],
+        [
+          24.482584,
+          118.0683842
+        ],
+        [
+          24.4824277,
+          118.0679658
+        ],
+        [
+          24.482169,
+          118.0675045
+        ],
+        [
+          24.4818224,
+          118.067145
+        ],
+        [
+          24.4814025,
+          118.0668232
+        ],
+        [
+          24.4807483,
+          118.0664691
+        ],
+        [
+          24.4800062,
+          118.0660936
+        ],
+        [
+          24.453532,
+          118.0525
+        ],
+        [
+          24.4530205,
+          118.0522492
+        ],
+        [
+          24.452536,
+          118.0520818
+        ],
+        [
+          24.4520477,
+          118.0519637
+        ],
+        [
+          24.4516148,
+          118.0518881
+        ],
+        [
+          24.4510026,
+          118.0518886
+        ],
+        [
+          24.4505192,
+          118.0520174
+        ],
+        [
+          24.4500455,
+          118.0522642
+        ],
+        [
+          24.4497134,
+          118.0525324
+        ],
+        [
+          24.4492401,
+          118.0532808
+        ]
+      ]
+    },
+    "sanqiutian-ferry:xiamen-ferry": {
+      "positionSource": "https://www.openstreetmap.org/way/732161924",
+      "label": "三丘田 → 厦门轮渡码头 · 游客轮渡",
+      "positions": [
+        [
+          24.4573436,
+          118.0676974
+        ],
+        [
+          24.4571236,
+          118.0673433
+        ],
+        [
+          24.4570332,
+          118.0672199
+        ],
+        [
+          24.456888,
+          118.0670697
+        ],
+        [
+          24.4567109,
+          118.0669249
+        ],
+        [
+          24.4565742,
+          118.0668498
+        ],
+        [
+          24.4564215,
+          118.0667924
+        ],
+        [
+          24.4562129,
+          118.0667479
+        ],
+        [
+          24.456015,
+          118.0667289
+        ],
+        [
+          24.4557343,
+          118.0667184
+        ],
+        [
+          24.4555121,
+          118.0667103
+        ],
+        [
+          24.4552533,
+          118.0666996
+        ],
+        [
+          24.4550553,
+          118.0666872
+        ],
+        [
+          24.454829,
+          118.0666706
+        ],
+        [
+          24.4546014,
+          118.0666379
+        ],
+        [
+          24.4543073,
+          118.0665802
+        ],
+        [
+          24.4540911,
+          118.0665065
+        ],
+        [
+          24.4538592,
+          118.0663965
+        ],
+        [
+          24.4536677,
+          118.0662775
+        ],
+        [
+          24.4534637,
+          118.0661229
+        ],
+        [
+          24.4533007,
+          118.065957
+        ],
+        [
+          24.4532003,
+          118.0658294
+        ],
+        [
+          24.4531292,
+          118.0657125
+        ],
+        [
+          24.4529205,
+          118.0653227
+        ]
+      ]
+    }
+  }
+}
