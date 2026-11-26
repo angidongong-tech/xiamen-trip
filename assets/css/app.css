@@ -432,3 +432,17 @@ main>.day-timeline {margin-top:7px}
 .timeline-stop.no-photo .stop-detail {align-self:center}
 .timeline-stop.no-photo>.local-info {grid-row:2;grid-column:1/-1}
 .timeline-stop.no-photo .stop-detail:not([open]) {grid-row:1}
+
+.room-context {display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:3px 9px;margin:0 0 7px;padding:6px 9px;border-radius:9px;background:var(--sea-light);color:var(--sea);font-size:.78rem}
+.room-context strong {font-size:.86rem;min-width:0;overflow-wrap:anywhere}
+.room-card {background:#edf3ed}
+.room-members {display:flex;align-items:center;flex-wrap:wrap;gap:5px;margin-bottom:6px}
+.member-badge {display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--sea);color:#fff;font-size:.86rem}
+.cloud-status {font-size:.84rem;color:var(--muted);min-height:1.35em;margin:5px 0}
+.member-row {flex-wrap:wrap}
+.member-row form {flex-wrap:wrap}
+.member-row select {width:auto;max-width:100%}
+.invite-copy,.sync-conflict {margin-top:8px;overflow-wrap:anywhere}
+.invite-copy .button {margin-top:5px}
+.shared-place-note {margin-top:7px;border-top:1px solid var(--line);padding-top:7px}
+.checkin-by {display:inline-block;margin-inline-start:3px;color:#3f6659;font-size:.73rem}

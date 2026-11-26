@@ -1,3 +1,7 @@
+import {CloudTrip, shouldConnect, invitationToken} from './cloud.js';
+import {cloudConfig} from './cloud-config.js';
+import {sharedView, syncNames} from './cloud-view.js';
+import {changeRows, projectRoom, photoNotes, migrationRows, migrationSummary} from './room-model.js';
 import {mountGeoMap} from './geo-map.js';
 import {storageKey, statuses, originalOrder, emptyInfo, emptyState, validateState, localDate, calculate, expenseCents, toCents, csv} from './state.js';
 
@@ -40,11 +44,12 @@ const icon = name => '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="
 const statusLabels = {places:'景点',food:'美食'};
 let data;
 let state;
+let localState;
 let current;
 let loadedOffline = false;
 let storageFailure = false;
 let noticeTimer;
-let ui = {foodGroup:'全部',foodDay:'all',foodMode:'all',foodQuery:'',mapFilter:'all',mapId:'',budgetDay:'all',editExpense:'',timeline:'compact'};
+let ui = {foodGroup:'全部',foodDay:'all',foodMode:'all',foodQuery:'',mapFilter:'all',mapId:'',budgetDay:'all',editExpense:'',timeline:'compact',cloudAuth:'signin',migrateTravel:false,migrateNotes:false};
 
 const button = (text, action, value = '', css = 'secondary', symbol = '', extra = '') =>
   '<button type="button" class="button '+css+'" data-action="'+action+'" data-value="'+escape(value)+'" '+extra+'>' + (symbol ? icon(symbol) : '') + text + '</button>';
@@ -72,7 +77,8 @@ function showNotice(text) {
 function persist(next) {
   try {
     localStorage.setItem(storageKey,JSON.stringify(next));
-    state = next;
+    localState = next;
+    if (!displayedRoom()) state = next;
     storageFailure = false;
     return true;
   } catch {
@@ -81,18 +87,31 @@ function persist(next) {
   }
 }
 
-function mutate(update) {
-  if (storageFailure) {
+function mutate(update,options={}) {
+  if (cloud.room&&!cloud.selected) {
+    showNotice('房间仍在打开。可切回本地模式再编辑本机数据。');
+    return false;
+  }
+  if (storageFailure&&!displayedRoom()) {
     showNotice('原有记录暂时无法读取。请先从「导出与导入」备份，再恢复有效记录。');
     return false;
   }
   const next = JSON.parse(JSON.stringify(state));
   update(next);
-  if (!validateState(next,data)) {
+  if (!validateState(next,data,{room:displayedRoom()})) {
     showNotice('这条记录未保存，请检查内容或金额。');
     return false;
   }
-  return persist(next);
+  if(!displayedRoom()) return persist(next);
+  try {
+    const patches=changeRows(state,next,options.payment);
+    if(!cloud.enqueue(patches,{bases:options.bases,notes:photoNotes(next)})) {
+      showNotice(cloud.editable?'未能保存到本机待同步队列。':'当前角色仅可查看此房间的共享记录。');
+      return false;
+    }
+    state=viewState();
+    return true;
+  } catch(error) {cloudError(error);return false;}
 }
 
 function startRoute() {
@@ -105,7 +124,7 @@ function route() {
   const day = /^[0-4]$/.test(index ?? '') ? Number(index) : null;
   if (page === 'trip') return {page,day:day ?? startRoute().day,stop:/^[a-z0-9-]+$/.test(stop??'')?stop:''};
   if (page === 'map') return {page,day};
-  if (['home','food','me','budget','stats','photos','gifts','backup','info','adjust','records','offline','custom'].includes(page)) return {page,day:null};
+  if (['home','food','me','shared','budget','stats','photos','gifts','backup','info','adjust','records','offline','custom'].includes(page)) return {page,day:null};
   return startRoute();
 }
 
@@ -369,7 +388,7 @@ function timelineStop(row,day,first) {
   const currentStatus = checkState('places',item.id).status;
   return '<article '+(row.priority==='交通'?'':'id="stop-'+item.id+'" ')+'class="timeline-stop'+(item.photo?'':' no-photo')+'"><div class="stop-line">'+
     '<div class="stop-name"><h3>'+escape(item.name)+'</h3><div class="stop-meta">'+flag(row.priority,row.priority==='核心'?'core':'')+
-    (first?'':'<time>'+escape(row.time)+'</time>')+(currentStatus==='skipped'?'<span>已跳过</span>':'')+'</div></div>'+
+    (first?'':'<time>'+escape(row.time)+'</time>')+(currentStatus==='skipped'?'<span>已跳过</span>':'')+checkinBy('places',item.id)+'</div></div>'+
     '<div class="stop-tools">'+quickNav(item)+
     (row.priority==='交通'?'':button('', 'done','places:'+item.id,'compact-icon '+(currentStatus==='done'?'success':''),'check',
       'aria-label="'+(currentStatus==='done'?'已完成 ':'打卡 ')+escape(item.name)+'" aria-pressed="'+(currentStatus==='done')+'"'))+'</div></div>'+
@@ -378,7 +397,7 @@ function timelineStop(row,day,first) {
       '<p>'+escape(item.summary)+' · '+escape(row.duration)+'</p>'+
       (row.note?'<p class="callout">'+escape(row.note)+'</p>':'')+
       mapLinks(item)+verification(item)+(row.priority==='交通'?'':checkControls('places',item,true))+
-      (item.photo?photoPanel(item):''),'stop-detail')+'</article>';
+      (item.photo?photoPanel(item):'')+placeNote(item),'stop-detail')+'</article>';
 }
 
 function checkControls(type,item,alreadyHasButton=false) {
@@ -444,7 +463,7 @@ function matchesFood(item,filter) {
 function foodCard(item,context='food') {
   const saved = checkState('food',item.id);
   return '<article class="food-card"><div class="food-top"><div><h3>'+escape(item.name)+'</h3>'+
-    '<p>'+escape(item.recommended||'按现场选择')+'</p><small>'+escape(item.address||item.region)+'</small></div>'+
+    '<p>'+escape(item.recommended||'按现场选择')+'</p><small>'+escape(item.address||item.region)+'</small>'+checkinBy('food',item.id)+'</div>'+
     '<div class="food-tools">'+quickNav(item)+button('', 'favorite','food:'+item.id,'compact-icon '+(saved.favorite?'rose':''),'heart',
       'aria-pressed="'+saved.favorite+'" aria-label="'+(saved.favorite?'取消':'')+'收藏美食 '+escape(item.name)+'"')+
     button('', 'done','food:'+item.id,'compact-icon '+(saved.status==='done'?'success':''),'check',
@@ -666,6 +685,7 @@ async function showMap() {
 }
 
 const myPages = [
+  ['shared','共享旅行空间','user','登录、旅行房间和云同步'],
   ['budget','预算管理','wallet','记账、每日账单和预算'],
   ['stats','打卡统计','check','景点和美食记录'],
   ['photos','摄影收藏','camera','已标记机位、已拍和备注'],
@@ -679,7 +699,7 @@ const myPages = [
 ];
 
 function me() {
-  return heading('我的旅行手账','记录存在这台设备。两部手机可通过导出、导入手动共享。')+
+  return heading('我的旅行手账','可在本地模式或共享旅行房间中查看记录。')+
     '<div class="menu-list">'+myPages.map(([id,name,glyph,descr])=>'<a class="menu-link" href="#'+id+'"><span class="menu-icon">'+icon(glyph)+'</span><div><strong>'+
       name+'</strong><small>'+descr+'</small></div>'+icon('chevron')+'</a>').join('')+'</div>';
 }
@@ -691,7 +711,7 @@ function stats() {
     const num = key => items.filter(item=>checkState(type,item.id).status===key).length;
     return '<section class="panel">'+section(statusLabels[type])+'<p>已完成 '+num('done')+' · 已跳过 '+num('skipped')+' · 未完成 '+num('pending')+'</p>'+
       '<div class="index-list">'+(recorded.map(item=>'<div class="index-row"><div><h3>'+escape(item.name)+'</h3><p>'+
-        statuses[checkState(type,item.id).status]+(checkState(type,item.id).favorite?' · 已收藏':'')+'</p></div>'+
+        statuses[checkState(type,item.id).status]+(checkState(type,item.id).favorite?' · 已收藏':'')+checkinBy(type,item.id)+'</p></div>'+
         (type==='food'? link('去美食库','#food','text'):button('查看','openMap','place:'+item.id,'text','pin'))+'</div>').join('')||empty('还没有记录。'))+'</div></section>';
   };
   return heading('打卡统计','相同地点在不同日期共享同一条记录。',true)+
@@ -730,8 +750,8 @@ function backup() {
 const field = (label,name,value='',attrs='') => '<label>'+label+'<input name="'+name+'" value="'+escape(value)+'" '+attrs+'></label>';
 function info() {
   const details=state.info;
-  return heading('我的旅行信息','仅保存在这台设备。填写后会出现在对应的行程卡片和地图里。',true)+
-    '<form data-form="info" class="stack"><section class="panel form-grid">'+section('本岛住宿')+
+  return heading('我的旅行信息',displayedRoom()?'保存后会向当前房间成员共享住宿、车次和此表备注。':'仅保存在这台设备。填写后会出现在对应的行程卡片和地图里。',true)+
+    '<form data-form="info" data-version="'+cloud.version('setting','travel')+'" class="stack"><section class="panel form-grid">'+section('本岛住宿')+
     field('住宿名称','hotel',details.hotel,'maxlength="100" autocomplete="off" placeholder="本岛住宿点"')+
     field('地址','address',details.address,'maxlength="200" autocomplete="off" placeholder="填写地址以便导航"')+
     '<p class="fine">11月28日入住 · 12月2日退房 · 同一住宿点</p></section>'+
@@ -741,7 +761,7 @@ function info() {
     field('12月2日 · 厦门北站发车','departureTime',details.departureTime,'type="time"')+
     field('返程班次（选填）','departureService',details.departureService,'maxlength="100" autocomplete="off"')+
     '<label>鼓浪屿上岛码头<select name="ferryArrival">'+option('','默认：内厝澳',details.ferryArrival)+option('sanqiutian','已买三丘田上岛船票',details.ferryArrival)+'</select></label>'+
-    '<label>私人备注<textarea name="notes" maxlength="1000" rows="3">'+escape(details.notes)+'</textarea></label></section>'+
+    '<label>'+(displayedRoom()?'共享旅行备注':'私人备注')+'<textarea name="notes" maxlength="1000" rows="3">'+escape(details.notes)+'</textarea></label></section>'+
     '<button class="button primary">保存旅行信息</button></form>';
 }
 
@@ -750,7 +770,7 @@ function adjustment() {
     '<section class="panel adjust-list">'+section('当前顺序')+
     state.order.map((id,i)=>'<div class="index-row"><span>'+shortDate(data.itinerary.dates[i+1])+'</span><strong>'+escape(data.modules.get(id).swapTitle||data.modules.get(id).title)+'</strong>'+
       (i===1?flag('纪念日','pink'):'')+'</div>').join('')+'</section>'+
-    '<form class="panel form-grid" data-form="swap">'+section('交换两天')+
+    '<form class="panel form-grid" data-form="swap" data-version="'+cloud.version('itinerary','order')+'">'+section('交换两天')+
     [0,1].map((index)=>'<label>日期 '+(index+1)+'<select name="date'+index+'">'+state.order.map((m,i)=>option(String(i),shortDate(data.itinerary.dates[i+1])+' · '+(data.modules.get(m).swapTitle||data.modules.get(m).title),String(index))).join('')+'</select></label>').join('')+
     '<p class="callout">换日后请重新核对预约、船票、开放时间与天气。打卡、机位收藏和备注会保留。</p>'+
     '<div class="actions"><button class="button primary">交换日期</button>'+button('恢复原始行程','restoreOrder')+'</div></form>';
@@ -782,9 +802,9 @@ function quickExpenseForm(today) {
     '<button class="button primary">保存支出</button></div>'+
     detail('quick-fields','更多选填项',
       '<div class="form-grid">'+field('店铺或事项（选填）','title','','maxlength="120"')+
-      field('付款人昵称（选填）','payer','','maxlength="60" autocomplete="off"')+
+      payerField()+
       '<label>备注<textarea name="notes" maxlength="500" rows="2"></textarea></label>'+
-      '<label class="tick"><input name="shared" type="checkbox" checked> 两人共同支出</label></div>')+'</form>';
+      '<label class="tick"><input name="shared" type="checkbox" checked> ' +(displayedRoom()?'纳入房间共同分摊':'两人共同支出')+'</label></div>')+'</form>';
 }
 
 function budget() {
@@ -809,23 +829,27 @@ function budget() {
   const edit = state.expenses.find(item=>item.id===ui.editExpense);
   const dated = (ui.budgetDay==='all'?state.expenses:state.expenses.filter(item=>item.date===ui.budgetDay)).slice().sort((a,b)=>b.date.localeCompare(a.date));
   const categoryTotals = data.budget.categories.map(name=>[name,categoryTotal([name])]).filter(([,sum])=>sum>0).sort((a,b)=>b[1]-a[1]);
-  return heading('旅行预算','',true)+
+  const members=cloud.selected?.members.filter(member=>member.active).length??0;
+  const people=displayedRoom()?sharedRows.get('setting/size')?.body?.count??Math.max(1,members):2;
+  const sharedTotal=expenseCents(state.expenses.filter(item=>item.shared));
+  return heading(displayedRoom()?'共同旅行账本':'旅行预算',displayedRoom()?'此页的所有账目均对当前房间成员可见。':'',true)+
     '<section class="panel budget-hero"><div class="budget-summary">'+
     '<div><span>'+((balance??0)<0?'已超预算':'剩余预算')+'</span><strong>'+(balance===null?'待设置':centMoney(Math.abs(balance)))+'</strong></div>'+
     '<div><span>今日消费</span><strong>'+centMoney(expenseCents(state.expenses.filter(item=>item.date===today)))+'</strong></div>'+
     '<div><span>日均剩余可用</span><strong>'+format(average)+'</strong></div>'+
     '<div><span>总预算</span><strong>'+(budgetTotal===null?'待设置':money(budgetTotal))+'</strong></div>'+
     '<div><span>实际累计支出</span><strong>'+centMoney(spent)+'</strong></div>'+
-    '<div><span>人均实际支出</span><strong>'+centMoney(Math.round(spent/2))+'</strong></div></div>'+
+    '<div><span>人均实际支出</span><strong>'+centMoney(Math.round((displayedRoom()?sharedTotal:spent)/people))+'</strong></div></div>'+
+    (displayedRoom()?'<p class="fine">共同支出 '+centMoney(sharedTotal)+' · 按 '+people+' 人分摊。累计支出含本房间全部账目。</p>':'')+
     '<p class="fine">'+(remainingDays?'余 '+remainingDays+' 个旅行日 · 日均仅供参考':'旅行日期已结束')+'</p>'+
     (budgetTotal===null?'':progress(Math.min(spent,toCents(budgetTotal)),toCents(budgetTotal),'总预算已使用')+
       '<p class="fine">已使用 '+(budgetTotal===0?(spent===0?'0%':'超出零元预算'):Math.round(spent/toCents(budgetTotal)*100)+'%')+'</p>')+
     '<div class="actions">'+button('快捷记账','jump','quick-expense','primary','plus')+
     button('完整记账','jump','expense-form','secondary','list')+'</div>'+
-    detail('budget-total','编辑总预算','<form class="field-line" data-form="budgetTotal">'+
+    detail('budget-total','编辑总预算','<form class="field-line" data-form="budgetTotal" data-version="'+cloud.version('setting','budget')+'">'+
       field('设置总预算（元）','amount',budgetTotal??'','type="number" min="0" max="10000000" step=".01" inputmode="decimal" placeholder="留空表示待设置"')+
       '<button class="button secondary">保存</button></form>')+'</section>'+
-    quickExpenseForm(today)+
+    quickExpenseForm(today)+accountExpenses()+
     '<section class="panel cost-panel">'+section('旅行固定成本')+
     '<div class="budget-summary"><div><span>已支付（按记账）</span><strong>'+centMoney(fixedPaid)+'</strong></div>'+
     '<div><span>尚未支付的已知预估</span><strong>'+centMoney(fixedRemaining)+'</strong></div></div>'+
@@ -838,15 +862,15 @@ function budget() {
     '<div class="form-columns">'+field('日期','date',edit?.date??(ui.budgetDay==='all'?today:ui.budgetDay),'type="date" required')+
     expenseAmount(edit?.amount??'')+'</div>'+expenseCategories(edit?.category??'正餐')+
     field('店铺或事项', 'title',edit?.title??'','maxlength="120" required')+
-    field('付款人昵称（选填）','payer',edit?.payer??'','maxlength="60" autocomplete="off"')+
+    payerField(edit)+
     '<label>备注<textarea name="notes" maxlength="500" rows="2">'+escape(edit?.notes??'')+'</textarea></label>'+
-    '<label class="tick"><input name="shared" type="checkbox"'+(!edit||edit.shared?' checked':'')+'> 两人共同支出</label>'+
+    '<label class="tick"><input name="shared" type="checkbox"'+(!edit||edit.shared?' checked':'')+'> ' +(displayedRoom()?'纳入房间共同分摊':'两人共同支出')+'</label>'+
     '<div class="actions"><button class="button primary">'+(edit?'保存修改':'添加支出')+'</button>'+(edit?button('取消修改','cancelExpense'):'')+'</div></form>'+
     '<section class="panel">'+section('每日账单')+
     '<label>查看日期<select data-update="budgetDay">'+option('all','全部日期',ui.budgetDay)+days.map(day=>option(day,day,ui.budgetDay)).join('')+'</select></label>'+
     '<p class="subtle">所选日期累计 '+money(calculate(dated))+'</p>'+
     (dated.map(item=>'<article class="expense"><div><h3>'+escape(item.title)+'</h3><p>'+escape(item.date)+' · '+escape(item.category)+' · '+(item.shared?'共同支出':'个人支出')+
-      (item.payer?' · '+escape(item.payer):'')+'</p>'+(item.notes?'<p>'+escape(item.notes)+'</p>':'')+'</div><strong>'+money(item.amount)+'</strong>'+
+      (payerName(item)?' · '+escape(payerName(item)):'')+'</p>'+(item.notes?'<p>'+escape(item.notes)+'</p>':'')+'</div><strong>'+money(item.amount)+'</strong>'+
       '<div class="actions">'+button('修改','editExpense',item.id,'text')+button('删除','deleteExpense',item.id,'text danger')+'</div></article>').join('')||empty('所选日期还没有账单。'))+
     detail('daily-expenses','查看每天合计',days.map(day=>'<div class="index-row"><span>'+escape(day)+'</span><strong>'+money(calculate(state.expenses.filter(item=>item.date===day)))+'</strong></div>').join(''))+
     '<div class="actions">'+button('导出 CSV','exportCsv','','secondary','download')+button('导出 JSON 账单','exportExpenses','','secondary','download')+'</div></section>'+
@@ -867,7 +891,7 @@ function records() {
 
 function offline() {
   return heading('离线与主屏幕','出发前用 Safari 成功打开一次，等待离线素材准备完成。',true)+
-    '<section class="panel">'+section('离线状态',flag('V2.0','core'))+'<p id="offline-status">'+(loadedOffline?'核心行程已缓存，可离线查看。':'正在检查缓存。如长期未就绪，请联网后重新打开。')+'</p>'+
+    '<section class="panel">'+section('离线状态',flag('V3.0','core'))+'<p id="offline-status">'+(loadedOffline?'核心行程已缓存，可离线查看。':'正在检查缓存。如长期未就绪，请联网后重新打开。')+'</p>'+
     '<p class="subtle">本地行程、图片、打卡和预算可离线使用。在线底图、地图导航及外链需要联网。断网时会显示路线示意图。</p></section>'+
     '<section class="panel">'+section('安全更新')+'<p>联网打开一次后，关闭所有打开本站的标签页或主屏幕窗口，再重新打开。看到更新提示时，请先保存表单内容。</p>'+
     '<p class="fine">更新会沿用现有记录。可先导出备份，更新时无需清除 Safari 网站数据。</p>'+link('导出备份','#records','text','download')+'</section>'+
@@ -890,7 +914,137 @@ function custom() {
       button('删除','deleteCustom',type+':'+item.id,'text danger')+'</div>').join('')||empty('还没有自定义记录。'))+'</section>';
 }
 
-const views = {home,trip:dayView,map:mapView,food:foodView,me,budget,stats,photos,gifts,backup,info,adjust:adjustment,records,offline,custom};
+const cloud=new CloudTrip(cloudChanged);
+const scopeName=()=>cloud.selected?.trip.name;
+let shownScope;
+let sharedRows=new Map();
+function displayedRoom() {return Boolean(cloud.selected);}
+function viewState() {
+  sharedRows=displayedRoom()?cloud.rows:new Map();
+  return displayedRoom()?projectRoom(sharedRows,cloud.room.notes,data):localState;
+}
+function cloudStatus() {
+  const status=syncNames[cloud.state];
+  const pending=cloud.queue.length;
+  const last=cloud.selected?.lastSync;
+  const text=status+(pending?' · 待确认 '+pending+' 项':'')+
+    (last?' · 上次 '+new Date(last).toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'}):'')+
+    (displayedRoom()&&!cloud.isRealtime?' · 定期检查':'');
+  for (const node of document.querySelectorAll('[data-cloud-status]')) {
+    if (node.textContent!==text) node.textContent=text;
+  }
+}
+function cloudChanged(refresh=false) {
+  if(!data||!current) return;
+  if (cloud.recovery&&current.page!=='shared') {location.hash='shared';return;}
+  if ((cloud.phase==='ready'||cloud.phase==='setup')&&new URLSearchParams(location.search).get('auth')==='return'&&
+      !location.hash.includes('access_token=')) {
+    const url=new URL(location.href);
+    url.searchParams.delete('auth');
+    url.hash='shared';
+    history.replaceState(null,'',url);
+    current=route();
+    refresh=true;
+  }
+  const context=cloud.actor&&cloud.room?cloud.actor+'/'+cloud.room.trip:'';
+  const changedScope=context!==shownScope;
+  if(changedScope) {
+    shownScope=context;
+    resetScopeUi();
+  }
+  state=viewState();
+  if ((changedScope||refresh)&&(!main.querySelector('form[data-dirty]')||changedScope)) render(true);
+  else cloudStatus();
+}
+function resetScopeUi() {
+  ui.editExpense='';
+  ui.editExpenseVersion=0;
+  ui.noteEdit='';
+  ui.noteVersion=0;
+  ui.migrateTravel=false;
+  ui.migrateNotes=false;
+  ui.mapId='';
+}
+function prepareCloudRoute() {
+  if(location.hash.startsWith('#join/')) {
+    cloud.captureInvite(location.hash);
+    history.replaceState(null,'',location.pathname+location.search+'#shared');
+  }
+  if(shouldConnect()) cloud.boot();
+}
+const cloudViewTools={escape,heading,section,button,link,flag,detail,field,option,money};
+function cloudPage() {return sharedView(cloud,cloudViewTools,ui,storageFailure?null:localState);}
+function roomContext() {
+  return displayedRoom()?'<a class="room-context" href="#shared"><strong>'+escape(scopeName())+'</strong><span data-cloud-status></span></a>':
+    cloud.room?'<p class="room-context">正在读取共享房间。未打开时仍使用本机数据。</p>':'';
+}
+function checkinBy(type,id) {
+  if (!displayedRoom()) return '';
+  const row=sharedRows.get('checkin/'+type+':'+id);
+  if(row?.body?.status!=='done') return '';
+  const member=cloud.selected.members.find(member=>member.id===row.actor);
+  return '<span class="checkin-by">'+escape(member?.nickname??'旅行成员')+' · '+
+    escape(new Date(row.updated_at).toLocaleString(undefined,{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}))+'</span>';
+}
+function placeNote(item) {
+  if (!displayedRoom()) return '';
+  const id='spot:'+item.id;
+  const note=sharedRows.get('note/'+id)?.body?.text??'';
+  return '<div class="shared-place-note"><p class="fine"><strong>共享景点备注</strong> · 房间成员可见</p>'+
+    (cloud.editable?'<form class="memo" data-form="cloudNote" data-id="'+escape(id)+'" data-place="'+escape(item.id)+
+      '" data-version="'+cloud.version('note',id)+'"><label>共享景点备注<textarea name="text" rows="2" maxlength="1000">'+escape(note)+
+      '</textarea></label><button class="button secondary">保存共享备注</button></form>':
+      note?'<p>'+escape(note)+'</p>':'<p class="fine">暂无共享备注。</p>')+'</div>';
+}
+function payerField(expense) {
+  if (!displayedRoom()) return field('付款人昵称（选填）','payer',expense?.payer??'','maxlength="60" autocomplete="off"');
+  const chosen=expense?sharedRows.get('expense/'+expense.id)?.body?.payer_id??'':cloud.actor;
+  return '<label>付款成员<select name="payerMember">'+option('','未分配／房间外付款人',chosen)+
+    cloud.selected.members.filter(member=>member.active||member.id===chosen).map(member=>option(member.id,member.nickname+(member.id===cloud.actor?'（我）':member.active?'':'（已退出）'),chosen)).join('')+
+    '</select></label>'+field('补充付款人昵称（选填）','payer',expense?.payer??'','maxlength="60" autocomplete="off"');
+}
+function payerName(expense) {
+  const payer=displayedRoom()?sharedRows.get('expense/'+expense.id)?.body?.payer_id:null;
+  return cloud.selected?.members.find(member=>member.id===payer)?.nickname??expense.payer;
+}
+function accountExpenses() {
+  if(!displayedRoom()) return '';
+  const rows=[...sharedRows.values()].filter(row=>row.kind==='expense'&&row.body);
+  const members=cloud.selected.members.filter(member=>member.active||rows.some(row=>row.body.payer_id===member.id));
+  const latest=rows.slice().sort((a,b)=>b.updated_at.localeCompare(a.updated_at)).slice(0,3);
+  return '<section class="panel">'+section('成员实付和最近账目')+
+    members.map(member=>'<div class="index-row"><span>'+escape(member.nickname)+'</span><strong>'+
+      centMoney(rows.filter(row=>row.body.payer_id===member.id).reduce((sum,row)=>sum+row.body.cents,0))+'</strong></div>').join('')+
+    '<p class="fine">未分配付款成员 '+centMoney(rows.filter(row=>!row.body.payer_id).reduce((sum,row)=>sum+row.body.cents,0))+'</p>'+
+    (latest.length?detail('shared-latest','最近 '+latest.length+' 笔共享消费',latest.map(row=>
+      '<div class="index-row"><span>'+escape(row.body.title)+' · '+escape(payerName({id:row.record_id,payer:row.body.payer})||'未分配')+
+      '</span><strong>'+centMoney(row.body.cents)+'</strong></div>').join('')):'')+'</section>';
+}
+function formBase(form,kind,id) {
+  return {bases:{[kind+'/'+id]:Number(form.dataset.version||0)}};
+}
+function cloudError(error) {
+  const message=error.code==='42501'?'当前账号没有执行此操作的权限。':
+    ['AuthApiError','AuthRetryableFetchError','AuthWeakPasswordError'].includes(error.name)?(
+      error.code==='email_not_confirmed'?'请先在邮箱中验证账号。':
+      error.code==='invalid_credentials'?'邮箱或密码不正确。':
+      error.status===429?'请求太频繁，请稍后再试。':'认证未完成，请检查邮箱、密码或稍后再试。'):
+    error.code==='22023'?'操作未被接受，请检查邀请有效期、权限或输入内容。':
+    error instanceof Error&&error.message.length<100?error.message:'云端暂时不可用，请稍后重试。';
+  showNotice(message);
+}
+function runCloud(task) {
+  return Promise.resolve().then(task).catch(cloudError);
+}
+function backupRoom() {
+  if(!displayedRoom()) return;
+  download('厦门纪行-共享房间备份.json',JSON.stringify({
+    exportedAt:new Date().toISOString(),trip:cloud.selected.trip,
+    records:[...cloud.rows.values()],pending:cloud.queue
+  },null,2),'application/json');
+}
+
+const views = {shared:cloudPage,home,trip:dayView,map:mapView,food:foodView,me,budget,stats,photos,gifts,backup,info,adjust:adjustment,records,offline,custom};
 function render(keepDetails=false) {
   const open = new Set(keepDetails?[...main.querySelectorAll('details[open]')].map(node=>node.dataset.detail):[]);
   const held = keepDetails ? document.activeElement : null;
@@ -899,7 +1053,15 @@ function render(keepDetails=false) {
   const focusContext = focusable?.closest('details')?.dataset.detail;
   liveMap?.destroy();
   liveMap=undefined;
-  main.innerHTML=(storageFailure?'<p class="callout">无法读取原有的本地数据。检查 Safari 的站点存储，或从备份恢复。</p>':'')+views[current.page](current.day);
+  main.innerHTML=roomContext()+(storageFailure&&!displayedRoom()?'<p class="callout">无法读取原有的本地数据。检查 Safari 的站点存储，或从备份恢复。</p>':'')+views[current.page](current.day);
+  if (displayedRoom()&&!cloud.editable) {
+    const names=['info','budgetTotal','expense','custom','swap','gift'];
+    const edits=['done','favorite','photoFavorite','photoTaken','restoreOrder','editExpense','deleteExpense','deleteCustom'];
+    for(const node of main.querySelectorAll('input,button,select,textarea')) {
+      if(names.includes(node.form?.dataset.form)||edits.includes(node.dataset.action)||node.dataset.update==='status')
+        node.disabled=true;
+    }
+  }
   for (const node of main.querySelectorAll('details')) {
     node.open=open.has(node.dataset.detail) || (ui.timeline==='detail' && node.classList.contains('stop-detail'));
   }
@@ -909,6 +1071,7 @@ function render(keepDetails=false) {
     replacement?.focus({preventScroll:true});
   }
   if (current.page==='map') showMap();
+  cloudStatus();
   const active = ['home','trip','map','food'].includes(current.page)?current.page:'me';
   navigation.innerHTML=[
     ['home','首页','home'],['trip','行程','itinerary'],['map','地图','map'],['food','美食','food'],['me','我的','user']
@@ -918,6 +1081,7 @@ function render(keepDetails=false) {
 }
 
 function changeRoute() {
+  prepareCloudRoute();
   const next=route();
   if (current?.page!==next.page||current?.day!==next.day) {
     if (next.page==='trip') ui.timeline='compact';
@@ -978,6 +1142,64 @@ function updatePhoto(id,update) {
 }
 
 const actions = {
+  cloudAuthMode(value) {ui.cloudAuth=value;render(true);},
+  cloudRetry() {return cloud.boot(true);},
+  cloudSync() {return cloud.sync();},
+  cloudList() {return runCloud(async()=>{await cloud.refreshList();render(true);});},
+  cloudOpen(id) {return runCloud(()=>cloud.open(id));},
+  cloudLocal() {cloud.closeRoom();cloudChanged(true);showNotice('已切回本机记录');},
+  cloudLogout() {
+    if(cloud.accountQueue.length&&!window.confirm('还有待同步记录。退出后它们会保存在当前账号的本机备份区。现在退出？'))return;
+    return cloud.signOut();
+  },
+  cloudLeave() {
+    const room=cloud.room;
+    if(!room||!cloud.selected||!window.confirm('退出后将失去房间的云端访问。是否继续？'))return;
+    if(window.confirm('先把房间和待同步记录下载为本机备份？')) backupRoom();
+    return runCloud(async()=>{
+      await cloud.rpc('xm_leave',{p_trip:room.trip});
+      if(cloud.room===room) {cloud.revoke(room);cloud.message='已退出房间。待同步记录仍保留在账号备份区。';}
+      await cloud.refreshList();
+      cloudChanged(true);
+    });
+  },
+  cloudRoomBackup:backupRoom,
+  cloudQueueBackup() {
+    download('厦门纪行-待同步记录备份.json',JSON.stringify(cloud.accountQueue,null,2),'application/json');
+  },
+  cloudInvites() {return runCloud(async()=>{
+    await cloud.refreshInvites();
+    render(true);
+    const list=main.querySelector('[data-detail="invite-list"]');
+    if(list)list.open=true;
+  });},
+  cloudRevokeInvite(id) {
+    if(!window.confirm('撤销此单次邀请？'))return;
+    return runCloud(async()=>{
+      await cloud.rpc('xm_revoke_invite',{p_trip:cloud.room.trip,p_invite:id});
+      cloud.inviteLink='';
+      await cloud.refreshInvites();render(true);showNotice('邀请已撤销');
+    });
+  },
+  cloudRemove(id) {
+    if(!window.confirm('移除此成员并撤销其访问权限？'))return;
+    return runCloud(async()=>{await cloud.rpc('xm_member',{p_trip:cloud.room.trip,p_user:id,p_role:null});await cloud.sync();});
+  },
+  cloudConflictKeep(id) {
+    if(window.confirm('保留云端版本，并从待同步队列移除这条本机修改？')&&cloud.resolve(id,false)) {
+      cloudChanged(true);
+    }
+  },
+  cloudConflictRetry(id) {
+    if(window.confirm('确认以你的修改替换冲突时看到的云端版本？如果其他人已再次修改，会继续提示冲突。'))
+      runCloud(()=>{cloud.resolve(id,true);cloudChanged(true);});
+  },
+  cloudEditNote(id) {ui.noteEdit=id;ui.noteVersion=cloud.version('note',id);render(true);},
+  cloudDeleteNote(id) {
+    if(window.confirm('删除这条共享备注？')) runCloud(()=>{
+      if(cloud.enqueue([{kind:'note',record_id:id,body:null}])) cloudChanged(true);
+    });
+  },
   jump, copy:copyText,
   timeline(value) {
     ui.timeline=value;
@@ -1007,7 +1229,7 @@ const actions = {
       showNotice('已恢复原始日期，请核对预约和船票');
     }
   },
-  editExpense(id) { ui.editExpense=id; render(true); jump('expense-form'); },
+  editExpense(id) { ui.editExpense=id; ui.editExpenseVersion=cloud.version('expense',id); render(true); jump('expense-form'); },
   cancelExpense() { ui.editExpense=''; render(true); },
   deleteExpense(id) {
     if (!window.confirm('删除这笔支出？')) return;
@@ -1027,7 +1249,7 @@ const actions = {
   },
   export() {
     try {
-      const contents=storageFailure?localStorage.getItem(storageKey):JSON.stringify(state,null,2);
+      const contents=storageFailure?localStorage.getItem(storageKey):JSON.stringify(localState,null,2);
       if (!contents) throw new Error('No record available');
       download('厦门纪行-旅行备份.json',contents,'application/json');
       showNotice('旅行备份已导出');
@@ -1042,7 +1264,8 @@ const actions = {
     if (!window.confirm('再次确认：删除本地旅行记录？')) return;
     try {
       localStorage.removeItem(storageKey);
-      state=emptyState();
+      localState=emptyState();
+      if(!displayedRoom())state=localState;
       storageFailure=false;
       ui.editExpense='';
       render();
@@ -1077,6 +1300,10 @@ function onChange(event) {
   const {update,id,type}=target.dataset;
   if (!update) return;
   const {value}=target;
+  if (update==='migrateChoice') {
+    ui[target.name==='travel'?'migrateTravel':'migrateNotes']=target.checked;
+    render(true);return;
+  }
   if (update==='import') { importFile(target); return; }
   if (update==='giftCheck') {
     if (!mutate(next=>{next.gifts[id]={bought:target.checked,amount:next.gifts[id]?.amount??null};}))
@@ -1093,6 +1320,70 @@ function onChange(event) {
 }
 
 const submit = {
+  cloudAuth(form,h,values) {return runCloud(async()=>{
+    const mode=form.dataset.mode;
+    await cloud.authenticate(mode,{email:h('email'),password:String(values.get('password')??'')});
+    if (mode==='signup'||mode==='resend') showNotice('请检查邮箱并打开验证邮件');
+    if (mode==='reset') showNotice('若账号已登记，邮箱将收到重设链接');
+    if (mode==='password') showNotice('新密码已保存');
+  });},
+  cloudCreate(form,h) {return runCloud(async()=>{
+    const actor=cloud.actor;
+    const id=await cloud.rpc('xm_create',{p_name:h('name')});
+    if(cloud.actor!==actor)return;
+    await cloud.refreshList(actor);await cloud.open(id);
+  });},
+  cloudJoin(form,h) {return runCloud(async()=>{
+    const token=invitationToken(h('token'));
+    if(!token)throw new Error('请粘贴有效邀请链接或令牌');
+    const actor=cloud.actor;
+    const id=await cloud.rpc('xm_join',{p_token:token});
+    if(cloud.actor!==actor)return;
+    cloud.captureInvite('');await cloud.refreshList(actor);await cloud.open(id);
+  });},
+  cloudProfile(form,h) {return runCloud(async()=>{
+    await cloud.rpc('xm_profile',{p_nickname:h('nickname')});
+    await cloud.refreshList();await cloud.sync();render(true);showNotice('昵称已保存');
+  });},
+  cloudInvite(form,h) {return runCloud(async()=>{
+    const room=cloud.room;
+    const invitation=await cloud.rpc('xm_invite',{p_trip:room.trip,p_role:h('role'),p_hours:Number(h('hours'))});
+    if(cloud.room!==room||cloud.role!=='owner')return;
+    cloud.inviteLink=cloudConfig.redirectUrl.split('?')[0]+'#join/'+invitation.token;
+    await cloud.refreshInvites();render(true);
+  });},
+  cloudMember(form,h) {
+    if(h('role')==='owner'&&!window.confirm('确认移交所有权？你将成为可编辑成员。'))return;
+    return runCloud(async()=>{
+      await cloud.rpc('xm_member',{p_trip:cloud.room.trip,p_user:form.dataset.id,p_role:h('role')});
+      await cloud.sync();await cloud.refreshList();render(true);
+    });
+  },
+  cloudRename(form,h) {return runCloud(async()=>{
+    await cloud.rpc('xm_rename',{p_trip:cloud.room.trip,p_name:h('name')});
+    await cloud.sync();await cloud.refreshList();render(true);
+  });},
+  cloudSize(form,h) {return runCloud(()=>{
+    const body=h('count')?{count:Number(h('count'))}:null;
+    if(cloud.enqueue([{kind:'setting',record_id:'size',body}],formBase(form,'setting','size'))) cloudChanged(true);
+  });},
+  cloudNote(form,h) {return runCloud(()=>{
+    const id=form.dataset.id||crypto.randomUUID();
+    const text=h('text');
+    const body=text?{text,place:form.dataset.place??''}:null;
+    if(!body&&!form.dataset.id)return;
+    if(cloud.enqueue([{kind:'note',record_id:id,body}],formBase(form,'note',id))) {
+      ui.noteEdit='';cloudChanged(true);showNotice('共享备注已保存到待同步队列');
+    }
+  });},
+  cloudImport() {return runCloud(()=>{
+    if(storageFailure||!cloud.editable||cloud.queue.some(op=>op.type==='import'))return;
+    const rows=migrationRows(localState,{travel:ui.migrateTravel,notes:ui.migrateNotes});
+    const summary=migrationSummary(rows);
+    if(!rows.length||!window.confirm('已备份原本机 JSON？确认将 '+summary.records+' 条记录（'+summary.count+' 笔，'+
+      centMoney(summary.cents)+'）分享给「'+scopeName()+'」的所有当前和未来成员？'))return;
+    if(cloud.beginImport(rows)) {render(true);showNotice('导入已排队，等待服务器校验');}
+  });},
   foodSearch(form,h) {
     ui.foodQuery=h('query');
     render(true);
@@ -1109,35 +1400,38 @@ const submit = {
       showNotice('伴手礼记录已保存');
   },
   info(form,h) {
-    if (mutate(next=>{next.info=Object.fromEntries(Object.keys(emptyInfo).map(key=>[key,h(key)]));})) {
-      showNotice('住宿与交通信息已保存在本机');
+    if (mutate(next=>{next.info=Object.fromEntries(Object.keys(emptyInfo).map(key=>[key,h(key)]));},formBase(form,'setting','travel'))) {
+      showNotice(displayedRoom()?'旅行信息已保存，等待云同步':'住宿与交通信息已保存在本机');
     }
   },
   swap(form,h) {
     const a=Number(h('date0')),b=Number(h('date1'));
     if (a===b) {showNotice('请选择两个不同的日期');return;}
-    if (mutate(next=>{[next.order[a],next.order[b]]=[next.order[b],next.order[a]];})) {
+    if (mutate(next=>{[next.order[a],next.order[b]]=[next.order[b],next.order[a]];},formBase(form,'itinerary','order'))) {
       ui.mapId='';
       render(true);
       showNotice('日期已交换。请重新核对预约、轮渡和天气。');
     }
   },
   budgetTotal(form,h) {
-    if (mutate(next=>{next.total=h('amount')?Number(h('amount')):null;})) {
+    if (mutate(next=>{next.total=h('amount')?Number(h('amount')):null;},formBase(form,'setting','budget'))) {
       render(true);
       showNotice('总预算已保存');
     }
   },
   expense(form,h,formData) {
     const title=h('title') || (form.dataset.quick ? h('category') : '');
+    if (cloud.room&&!cloud.selected) {showNotice('房间仍在打开，请先切回本地模式再记本机账。');return;}
     if (!title) {showNotice('请填写店铺或事项');return;}
     const prior=form.dataset.id;
     const item={id:prior||crypto.randomUUID(),date:h('date'),amount:Number(h('amount')),category:h('category'),title,
       notes:h('notes'),shared:formData.has('shared'),payer:h('payer')};
     if (mutate(next=>{
-      if (prior) next.expenses=next.expenses.map(entry=>entry.id===prior?item:entry);
-      else next.expenses.push(item);
-    })) {
+      if (prior&&next.expenses.some(entry=>entry.id===prior)) {
+        next.expenses=next.expenses.map(entry=>entry.id===prior?item:entry);
+      } else if(!prior||displayedRoom()) next.expenses.push(item);
+    },{payment:{record:item.id,member:h('payerMember')||null},
+      bases:prior?{['expense/'+prior]:ui.editExpenseVersion}:undefined})) {
       if (ui.budgetDay!=='all'&&ui.budgetDay!==item.date) ui.budgetDay=item.date;
       ui.editExpense='';
       render(true);
@@ -1172,7 +1466,7 @@ async function readyOffline() {
     const registration=await navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'});
     const banner=document.querySelector('#update-banner');
     const showUpdate=()=>{
-      if (registration.waiting&&navigator.serviceWorker.controller) banner.hidden=false;
+      if (registration.waiting?.state==='installed'&&navigator.serviceWorker.controller) banner.hidden=false;
     };
     let requested=false;
     document.querySelector('#activate-update').addEventListener('click',()=>{
@@ -1207,6 +1501,8 @@ async function initialize() {
       else storageFailure=true;
     }
   } catch { storageFailure=true; }
+  localState=state;
+  prepareCloudRoute();
   current=route();
   render();
   if (current.stop) jump('stop-'+current.stop);
@@ -1216,7 +1512,8 @@ async function initialize() {
     try {
       const next=event.newValue?JSON.parse(event.newValue):emptyState();
       if (validateState(next,data)) {
-        state=next;
+        localState=next;
+        if(!displayedRoom()) state=next;
         storageFailure=false;
         render(true);
       }
@@ -1233,8 +1530,13 @@ async function initialize() {
     if (node) actions[node.dataset.action]?.(node.dataset.value);
   });
   main.addEventListener('change',onChange);
+  main.addEventListener('input',event=>{
+    const form=event.target.closest('form');
+    if(form)form.dataset.dirty='';
+  });
   main.addEventListener('submit',event=>{
     const form=event.target;
+    delete form.dataset.dirty;
     event.preventDefault();
     const values=new FormData(form);
     submit[form.dataset.form]?.(form,key=>String(values.get(key)??'').trim(),values);

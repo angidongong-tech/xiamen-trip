@@ -29,12 +29,12 @@ const custom = (value, type) => {
 const list = (value, check, limit = 1000) => Array.isArray(value) && value.length <= limit &&
   value.every(check) && new Set(value.map(item => item.id)).size === value.length;
 
-export function validateState(value, data) {
+export function validateState(value, data, {room=false}={}) {
   if (!keys(value, Object.keys(emptyState())) || value.version !== 1 ||
       !Array.isArray(value.order) || value.order.length !== originalOrder.length ||
       new Set(value.order).size !== originalOrder.length || !value.order.every(item => originalOrder.includes(item)) ||
-      !amount(value.total, true) || !list(value.customPlaces, item => custom(item, 'place')) ||
-      !list(value.customFood, item => custom(item, 'food'))) return false;
+      !amount(value.total, true) || !list(value.customPlaces, item => custom(item, 'place'),room?5000:1000) ||
+      !list(value.customFood, item => custom(item, 'food'),room?5000:1000)) return false;
   const placeIds = new Set([...data.places.map(item => item.id), ...value.customPlaces.map(item => item.id)]);
   const foodIds = new Set([...data.food.map(item => item.id), ...value.customFood.map(item => item.id)]);
   const photoIds = new Set(data.places.filter(item => item.photo).map(item => item.id));
@@ -48,7 +48,7 @@ export function validateState(value, data) {
     list(value.expenses,item => keys(item,['id','date','amount','category','title','notes','shared','payer']) &&
       id(item.id) && isDate(item.date) && amount(item.amount) && item.amount > 0 &&
       data.budget.categories.includes(item.category) && bounded(item.title,120) && Boolean(item.title.trim()) &&
-      bounded(item.notes,500) && typeof item.shared === 'boolean' && bounded(item.payer,60), 5000);
+      bounded(item.notes,500) && typeof item.shared === 'boolean' && bounded(item.payer,60), room?50000:5000);
 }
 
 export function localDate(date = new Date()) {
