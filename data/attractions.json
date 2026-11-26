@@ -1,0 +1,1045 @@
+[
+  {
+    "id": "xiamen-station",
+    "name": "厦门站",
+    "region": "厦门本岛",
+    "kind": "交通",
+    "summary": "抵达站在厦门本岛，出站后前往住宿点。"
+  },
+  {
+    "id": "stay",
+    "name": "本岛住宿点",
+    "region": "厦门本岛",
+    "kind": "住宿",
+    "summary": "五天四晚住同一本岛酒店，11月28日入住、12月2日退房。"
+  },
+  {
+    "id": "xiamen-north",
+    "name": "厦门北站",
+    "region": "厦门本岛",
+    "kind": "交通",
+    "summary": "返程车站。建议至少在列车发车前一小时到站。"
+  },
+  {
+    "id": "metro-line-one",
+    "name": "地铁1号线",
+    "region": "厦门本岛",
+    "kind": "交通",
+    "summary": "可用于往返集美及前往厦门北站，按实际出发站查路线。"
+  },
+  {
+    "id": "bashi",
+    "name": "八市",
+    "region": "八市",
+    "kind": "景点",
+    "summary": "先逛老市场，部分传统摊位晚上会收摊。",
+    "photo": {
+      "area": "入口、市场外围公共巷道",
+      "background": "旧招牌、摊灯、老街",
+      "light": "傍晚刚亮灯",
+      "style": "市井纪实",
+      "tip": "用1倍带进街景，靠边拍摄，避免挡住摊位。"
+    }
+  },
+  {
+    "id": "kaihe-road",
+    "name": "开禾路",
+    "region": "八市",
+    "kind": "景点",
+    "summary": "从八市沿骑楼和老店散步。",
+    "photo": {
+      "area": "开禾路公共骑楼下",
+      "background": "老建筑、拱廊、老店",
+      "light": "傍晚",
+      "style": "复古街拍",
+      "tip": "人物靠柱线内侧行走，2倍留出巷道纵深。"
+    }
+  },
+  {
+    "id": "yingping-road",
+    "name": "营平路",
+    "region": "八市",
+    "kind": "景点",
+    "summary": "适合慢逛的老城街巷。",
+    "photo": {
+      "area": "营平路公共巷口",
+      "background": "骑楼、街巷纵深",
+      "light": "日落前后",
+      "style": "胶片街拍",
+      "tip": "让人物从巷口自然走入，用2倍抓拍。"
+    }
+  },
+  {
+    "id": "zhongshan-road",
+    "name": "中山路步行街",
+    "region": "中山路",
+    "kind": "景点",
+    "summary": "骑楼、传统店铺与夜晚亮灯街景。",
+    "photo": {
+      "area": "连续骑楼拱廊、街角公共步行区",
+      "background": "柱廊、复古招牌、夜间暖光",
+      "light": "亮灯后",
+      "style": "老城电影感",
+      "tip": "沿柱廊用1倍拍行走全身，转角用2倍拍半身。"
+    }
+  },
+  {
+    "id": "china-city",
+    "name": "中华城",
+    "region": "中山路",
+    "kind": "景点",
+    "summary": "购物、补给、休息，摄影作顺路补充。",
+    "photo": {
+      "area": "商场外公共步行区域",
+      "background": "商业建筑外立面、亮灯橱窗",
+      "light": "入夜",
+      "style": "城市生活",
+      "tip": "利用橱窗光从侧面照脸，2倍抓拍。"
+    }
+  },
+  {
+    "id": "dianqian-exit-five",
+    "name": "殿前飞机打卡点",
+    "region": "殿前",
+    "kind": "景点",
+    "summary": "等飞机受机场运行、跑道、天气和航班影响。",
+    "photo": {
+      "area": "殿前站5号口周边确认为公共开放的区域",
+      "background": "开阔草坪、飞机、城市",
+      "light": "白天，能见度好时",
+      "style": "城市纪实",
+      "tip": "保持在公共区域，先用1倍构图；班次和机场转场时间均待核实。"
+    },
+    "keyword": "殿前地铁站5号口",
+    "verification": {
+      "status": "出发前核实",
+      "source": "",
+      "checkedOn": "",
+      "note": "机位开放、当天航线及高崎机场转场时间待确认。"
+    }
+  },
+  {
+    "id": "qingshui-palace",
+    "name": "清水宫",
+    "region": "殿前",
+    "kind": "景点",
+    "summary": "殿前附近的飞机摄影备选，与5号口二选一。",
+    "photo": {
+      "area": "古建筑外公共区域",
+      "background": "闽南屋檐、天空、可能经过的飞机",
+      "light": "白天",
+      "style": "古建筑与城市",
+      "tip": "1倍把屋檐放在下半部，不进入限制区。"
+    }
+  },
+  {
+    "id": "jimei-village",
+    "name": "集美学村",
+    "region": "集美学村",
+    "kind": "景点",
+    "summary": "从公共区域看嘉庚式建筑，不安排进入限制区域。",
+    "photo": {
+      "area": "学村开放道路和临水公共区",
+      "background": "嘉庚建筑、学院景观",
+      "light": "上午",
+      "style": "学院风",
+      "tip": "用1倍把人物放在建筑下方，保留屋顶轮廓。"
+    }
+  },
+  {
+    "id": "jimei-dragon-boat-pool",
+    "name": "龙舟池",
+    "region": "集美学村",
+    "kind": "景点",
+    "summary": "公共岸边看池水、闽南屋顶和学村建筑。",
+    "photo": {
+      "area": "龙舟池公共岸边步道",
+      "background": "池水倒影、南薰楼与道南楼方向",
+      "light": "上午",
+      "style": "复古学院风",
+      "tip": "1倍拍人和水面，2倍压缩红砖屋顶。"
+    }
+  },
+  {
+    "id": "nanxun-lou",
+    "name": "南薰楼、道南楼",
+    "region": "集美学村",
+    "kind": "景点",
+    "summary": "从龙舟池一侧公共区域看两座建筑外观。",
+    "photo": {
+      "area": "龙舟池开放岸线",
+      "background": "红砖建筑、层叠闽南屋顶",
+      "light": "上午",
+      "style": "建筑人像",
+      "tip": "2或3倍取屋檐细节，避免驶入或走进限制区域。"
+    },
+    "keyword": "集美学村 南薰楼 道南楼 龙舟池"
+  },
+  {
+    "id": "south-dike-park",
+    "name": "南堤公园",
+    "region": "集美学村",
+    "kind": "景点",
+    "summary": "临水放松的一段短步道。",
+    "photo": {
+      "area": "临水公共步道",
+      "background": "绿植、水面与嘉庚建筑远景",
+      "light": "上午",
+      "style": "自然人像",
+      "tip": "1倍沿岸线引导视线，让人物与绿植错开。"
+    }
+  },
+  {
+    "id": "jiageng-park",
+    "name": "嘉庚公园",
+    "region": "集美学村",
+    "kind": "景点",
+    "summary": "海边园林里的亭台与古典屋檐。",
+    "photo": {
+      "area": "开放亭廊和园路",
+      "background": "红柱、古典屋檐、园林",
+      "light": "中午选树荫",
+      "style": "东方风格",
+      "tip": "用柱子作前景，2倍拍静态半身。"
+    }
+  },
+  {
+    "id": "aoyuan",
+    "name": "鳌园",
+    "region": "集美学村",
+    "kind": "景点",
+    "summary": "嘉庚公园附近的园林，开放及票务现场核对。",
+    "photo": {
+      "area": "开放步道及建筑外侧",
+      "background": "闽南石雕、屋檐与海边园林",
+      "light": "中午选背阴面",
+      "style": "东方风格",
+      "tip": "靠边拍建筑细节，留出通道。"
+    }
+  },
+  {
+    "id": "jimei-dashe",
+    "name": "集美大社",
+    "region": "集美学村",
+    "kind": "景点",
+    "summary": "红砖古厝、老巷和文创小店。",
+    "photo": {
+      "area": "公共老巷口及店铺外立面",
+      "background": "红砖、木窗、古厝门框",
+      "light": "午后",
+      "style": "日系生活",
+      "tip": "2倍拍门窗框景或半身，避免拍入民居。"
+    }
+  },
+  {
+    "id": "shigu-road",
+    "name": "石鼓路",
+    "region": "集美学村",
+    "kind": "景点",
+    "summary": "在小店集中的街段随缘找午餐甜点。",
+    "photo": {
+      "area": "公共人行道和小店门口",
+      "background": "饮品、招牌、生活街景",
+      "light": "中午至午后",
+      "style": "生活街拍",
+      "tip": "用2倍拍手拿饮品和店招细节。"
+    }
+  },
+  {
+    "id": "haidi-road",
+    "name": "海堤路 · 厦门小镰仓",
+    "region": "集美学村",
+    "kind": "景点",
+    "summary": "海堤、自行车道、旧铁路元素和桥海视野。",
+    "photo": {
+      "area": "集美学村站南侧海堤路开放步道",
+      "background": "海面、旧铁路元素、桥梁",
+      "light": "午后",
+      "style": "日系电影感",
+      "tip": "用1倍沿堤岸取侧向构图，禁止进入运营铁路和封闭区。"
+    },
+    "keyword": "集美学村站南侧 海堤路 厦门小镰仓"
+  },
+  {
+    "id": "ten-mile-dike",
+    "name": "十里长堤",
+    "region": "集美学村",
+    "kind": "景点",
+    "summary": "留出傍晚摄影时段，等海风和远处过桥列车。",
+    "photo": {
+      "area": "海边草坪及公共堤岸",
+      "background": "跨海地铁桥、远处列车、海面",
+      "light": "16:00至日落前后",
+      "style": "逆光情侣照",
+      "tip": "全身用1倍，列车背景用2或3倍；不站上护栏。"
+    }
+  },
+  {
+    "id": "shapowei-art",
+    "name": "沙坡尾艺术西区",
+    "region": "沙坡尾",
+    "kind": "景点",
+    "summary": "创意小店和艺术街区，适合夜间慢逛。",
+    "photo": {
+      "area": "开放街巷和亮灯店铺外",
+      "background": "创意招牌、艺术墙、店灯",
+      "light": "入夜",
+      "style": "夜间街拍",
+      "tip": "靠近灯光用2倍取半身，按店规拍摄。"
+    }
+  },
+  {
+    "id": "shapowei-harbor",
+    "name": "沙坡尾避风坞",
+    "region": "沙坡尾",
+    "kind": "景点",
+    "summary": "水面倒影、渔港建筑和城市夜景。",
+    "photo": {
+      "area": "避风坞公开岸边",
+      "background": "彩色建筑、港景与灯光水面反射",
+      "light": "天色刚暗时",
+      "style": "港口电影感",
+      "tip": "1倍带进倒影，让人物站在有补光的岸边。"
+    }
+  },
+  {
+    "id": "nanputuo",
+    "name": "南普陀寺",
+    "region": "南普陀与厦大",
+    "kind": "景点",
+    "summary": "留一段安静时间，出发前核实实名预约和开放规则。",
+    "photo": {
+      "area": "寺庙广场、允许拍摄的殿前及庭院树荫",
+      "background": "屋檐、庭院、绿植",
+      "light": "上午",
+      "style": "东方温柔人像",
+      "tip": "以树荫作柔光；遵守标识，不拍禁拍的殿内与仪式。"
+    },
+    "verification": {
+      "status": "出发前核实",
+      "source": "https://m.xm.bendibao.com/jieri/95214.shtm",
+      "checkedOn": "2026-11-26",
+      "note": "公开报道提到实名分时预约。出发前在微信搜索「南普陀寺预约服务平台」，按官方小程序确认时段、开放与证件要求。"
+    }
+  },
+  {
+    "id": "xmu-exterior",
+    "name": "厦门大学外围",
+    "region": "南普陀与厦大",
+    "kind": "景点",
+    "summary": "从校园外公共区域看一眼，不安排入校。",
+    "photo": {
+      "area": "校门外围公共人行道",
+      "background": "校门、古典校园风格",
+      "light": "上午",
+      "style": "学院街拍",
+      "tip": "1倍快速拍外景，不堵门口。"
+    }
+  },
+  {
+    "id": "cat-street",
+    "name": "顶澳仔猫街",
+    "region": "南普陀与厦大",
+    "kind": "景点",
+    "summary": "猫咪墙面和特色小店，路过有兴趣再逛。",
+    "photo": {
+      "area": "公共小巷和彩色店面",
+      "background": "猫咪图案、彩色墙面",
+      "light": "上午或中午",
+      "style": "俏皮街拍",
+      "tip": "2倍抓手部互动，避免挡店铺。"
+    }
+  },
+  {
+    "id": "yanwu-platform",
+    "name": "演武大桥观景平台",
+    "region": "南普陀与厦大",
+    "kind": "景点",
+    "summary": "公开平台看桥、双子塔和海面。",
+    "photo": {
+      "area": "对公众开放的观景平台",
+      "background": "大桥弧线、双子塔、海面",
+      "light": "上午至中午",
+      "style": "城市海景",
+      "tip": "1倍让桥线引向人物，2倍压缩楼群。"
+    }
+  },
+  {
+    "id": "baicheng-beach",
+    "name": "白城沙滩",
+    "region": "南普陀与厦大",
+    "kind": "景点",
+    "summary": "海岸线和桥梁做背景，方便拍全身照。",
+    "photo": {
+      "area": "公共沙滩上方干燥区域",
+      "background": "海岸线、桥梁、沙面",
+      "light": "中午注意侧光",
+      "style": "海边纪实",
+      "tip": "1倍拍自然步伐，保持和浪线的距离。"
+    }
+  },
+  {
+    "id": "hulishan-fort",
+    "name": "胡里山炮台",
+    "region": "南普陀与厦大",
+    "kind": "景点",
+    "summary": "历史建筑与海景，是否购票入内现场决定。",
+    "photo": {
+      "area": "开放区域的石墙、绿树边",
+      "background": "石墙、海景、历史建筑",
+      "light": "中午找树荫",
+      "style": "复古建筑",
+      "tip": "2倍拍石墙质感，入口开放和购票以现场为准。"
+    }
+  },
+  {
+    "id": "pearl-bay",
+    "name": "珍珠湾",
+    "region": "环岛路",
+    "kind": "景点",
+    "summary": "临海步道、树荫和沙滩，可短暂停留。",
+    "photo": {
+      "area": "滨海公共步道",
+      "background": "树荫、海岸、沙滩",
+      "light": "午后",
+      "style": "日系自然",
+      "tip": "用树影作前景，1倍拍走路。"
+    }
+  },
+  {
+    "id": "zengcuoan",
+    "name": "曾厝垵",
+    "region": "环岛路",
+    "kind": "景点",
+    "summary": "经过即可，感兴趣再看看彩色小巷。",
+    "photo": {
+      "area": "公共巷口",
+      "background": "彩色小店、特色建筑",
+      "light": "中午至午后",
+      "style": "生活街拍",
+      "tip": "2倍取招牌，避免人流中停太久。"
+    }
+  },
+  {
+    "id": "tianquan-square",
+    "name": "天泉步道广场",
+    "region": "环岛路",
+    "kind": "景点",
+    "summary": "去盼归塔前的顺路停留点。",
+    "photo": {
+      "area": "开放广场及公共步道",
+      "background": "步道弧线、开阔天空",
+      "light": "午后",
+      "style": "建筑环境人像",
+      "tip": "1倍取引导线，广角时把人物放近中央。"
+    }
+  },
+  {
+    "id": "pangui-tower",
+    "name": "盼归塔",
+    "region": "环岛路",
+    "kind": "景点",
+    "summary": "白色环形观景建筑，是当天重点摄影点。",
+    "photo": {
+      "area": "开放的环形步道及观景区域",
+      "background": "白色弧形建筑、海面、高处视野",
+      "light": "午后",
+      "style": "建筑电影感",
+      "tip": "1倍或广角沿弧线构图，人放中间避免拉伸。"
+    }
+  },
+  {
+    "id": "music-square",
+    "name": "音乐广场",
+    "region": "环岛路",
+    "kind": "景点",
+    "summary": "海边草坪和音乐主题景观。",
+    "photo": {
+      "area": "开放草坪旁步道",
+      "background": "滨海草地、音乐景观",
+      "light": "午后",
+      "style": "滨海轻松感",
+      "tip": "1倍把天空和草地做大面积留白。"
+    }
+  },
+  {
+    "id": "xitouxia",
+    "name": "溪头下",
+    "region": "环岛路",
+    "kind": "景点",
+    "summary": "一段接近海岸线的散步路线。",
+    "photo": {
+      "area": "开放公共步道",
+      "background": "海岸线与近处绿植",
+      "light": "午后",
+      "style": "自然人像",
+      "tip": "2倍借绿植框景，不进入潮间带。"
+    }
+  },
+  {
+    "id": "haiyuntai",
+    "name": "海韵台",
+    "region": "环岛路",
+    "kind": "景点",
+    "summary": "沿公共步道看开阔海景。",
+    "photo": {
+      "area": "开放海边步道",
+      "background": "海面与远处岸线",
+      "light": "午后",
+      "style": "自然人像",
+      "tip": "沿步道平行拍走动，用1倍保留环境。"
+    }
+  },
+  {
+    "id": "buzai-bookstore",
+    "name": "不在书店 · 黄厝海滩店",
+    "region": "环岛路",
+    "kind": "景点",
+    "summary": "临海书架与窗景。高德列有此分店，旅行日营业待确认。",
+    "photo": {
+      "area": "确认营业及允许拍照后选择临海窗边",
+      "background": "书架、窗景、自然光",
+      "light": "午后",
+      "style": "松弛室内人像",
+      "tip": "人物侧向靠窗，用2倍拍半身；消费和摄影规则按店规。"
+    },
+    "keyword": "厦门 不在书店 黄厝海滩 环岛南路2695号",
+    "verification": {
+      "status": "出发前核实",
+      "source": "https://www.amap.com/place/B0FFLO087B",
+      "checkedOn": "2026-11-26",
+      "note": "高德列为「不在书店（厦门Neverland黄金海岸店）」，地址环岛南路2695号一层。旅行日营业、饮品及拍摄规则待确认。"
+    },
+    "address": "厦门市思明区环岛南路2695号一层"
+  },
+  {
+    "id": "wanyue-slope",
+    "name": "玩月坡",
+    "region": "环岛路",
+    "kind": "景点",
+    "summary": "临海草坪和树木，临时装置可能变化。",
+    "photo": {
+      "area": "公共临海草坪和开放步道",
+      "background": "树木、海面、草坪",
+      "light": "15:30后",
+      "style": "度假情侣照",
+      "tip": "1倍拍互动全身，2倍用树影做前景。"
+    }
+  },
+  {
+    "id": "huangcuo-beach",
+    "name": "黄厝海滩",
+    "region": "环岛路",
+    "kind": "景点",
+    "summary": "朝东的开阔沙滩，傍晚拍柔和天空与纪念合照。",
+    "photo": {
+      "area": "公共沙滩上方干燥区",
+      "background": "浪花、海平线、傍晚柔和天空",
+      "light": "16:15后至暮色",
+      "style": "海边纪念写真",
+      "tip": "1倍拍全身背影，2倍拍牵手；太阳通常不会直落入正前方海面。"
+    }
+  },
+  {
+    "id": "yefengzhai",
+    "name": "椰风寨",
+    "region": "环岛路",
+    "kind": "景点",
+    "summary": "黄厝之后的休闲延伸，随体力决定。",
+    "photo": {
+      "area": "开放的海边休闲区域",
+      "background": "椰树、沙滩、海面",
+      "light": "傍晚遇光时",
+      "style": "海岛度假",
+      "tip": "用1倍让椰树成为边缘框景，人物置于中间。"
+    }
+  },
+  {
+    "id": "dongdu-ferry",
+    "name": "东渡邮轮中心厦鼓码头",
+    "region": "厦门本岛码头",
+    "kind": "交通",
+    "summary": "按购票订单确认上岛码头与候船时间。",
+    "photo": {
+      "area": "码头外开放区域",
+      "background": "港口、远处船只",
+      "light": "上午候船",
+      "style": "旅行纪实",
+      "tip": "以登船检票为先。"
+    },
+    "keyword": "东渡客运码头 邮轮中心厦鼓码头",
+    "verification": {
+      "status": "出发前核实",
+      "source": "https://xmferry.com/xwzx/zxgg/32752.htm",
+      "checkedOn": "2026-11-26",
+      "note": "官方调整公告显示东渡游客码头参考运营为07:30–17:30。去内厝澳或三丘田的具体班次按当日售票确认。"
+    }
+  },
+  {
+    "id": "xiamen-ferry",
+    "name": "厦门轮渡码头",
+    "region": "厦门本岛码头",
+    "kind": "交通",
+    "summary": "鼓浪屿夜航在本岛的优先核对目的地，靠近中山路。",
+    "verification": {
+      "status": "出发前核实",
+      "source": "https://m.xmferry.com/wx/gdzhn/yk/",
+      "checkedOn": "2026-11-26",
+      "note": "官方须知中夜间返程航班开往厦门轮渡码头，核对实际公告。"
+    }
+  },
+  {
+    "id": "neicuoao-ferry",
+    "name": "内厝澳码头",
+    "region": "鼓浪屿",
+    "kind": "交通",
+    "summary": "默认白天上岛码头，根据实际船票选择。",
+    "verification": {
+      "status": "出发前核实",
+      "source": "https://m.xmferry.com/wx/gdzhn/yk/",
+      "checkedOn": "2026-11-26",
+      "note": "官方须知列出了内厝澳航线。具体上岛班次和目的码头以实际票面为准。"
+    }
+  },
+  {
+    "id": "sanqiutian-ferry",
+    "name": "三丘田码头",
+    "region": "鼓浪屿",
+    "kind": "交通",
+    "summary": "夜间返航候船点，末班和停航动态出发前核实。",
+    "verification": {
+      "status": "出发前核实",
+      "source": "https://m.xmferry.com/wx/gdzhn/yk/",
+      "checkedOn": "2026-11-26",
+      "note": "官方须知给出的三丘田到厦门轮渡码头夜航参考为18:00–24:00。24:00为次日00:00，具体末班、停航和检票截止以当日官方售票系统及码头公告为准。"
+    }
+  },
+  {
+    "id": "luchao-art-school",
+    "name": "鹭潮鼓浪屿美院",
+    "region": "鼓浪屿",
+    "kind": "景点",
+    "summary": "旧校舍、庭院及临海艺术空间，展览开放以现场为准。",
+    "photo": {
+      "area": "开放庭院、旧校舍外和可达临海区域",
+      "background": "建筑框景、绿植、海岸",
+      "light": "上午",
+      "style": "艺术建筑人像",
+      "tip": "用1倍把门廊当相框、2倍在树荫拍半身。"
+    },
+    "keyword": "鹭潮鼓浪屿美院 康泰路151号",
+    "verification": {
+      "status": "出发前核实",
+      "source": "https://gs.ctrip.com/html5/you/sight/xiamen21/10558652.html",
+      "checkedOn": "2026-11-26",
+      "note": "携程列出康泰路151号。旅行日的展览及开放区域仍需核实。"
+    }
+  },
+  {
+    "id": "gulang-stone",
+    "name": "鼓浪石",
+    "region": "鼓浪屿",
+    "kind": "景点",
+    "summary": "礁石和海岸，潮水较高时从安全处欣赏。",
+    "photo": {
+      "area": "公共步道和安全干燥区",
+      "background": "礁石、浪花、树木",
+      "light": "中午注意侧光",
+      "style": "环境人像",
+      "tip": "以1倍拍海岸，不攀爬湿滑礁石。"
+    }
+  },
+  {
+    "id": "meihua-beach",
+    "name": "美华沙滩",
+    "region": "鼓浪屿",
+    "kind": "景点",
+    "summary": "西侧海岸的一段沙滩，与鼓浪石顺路。",
+    "photo": {
+      "area": "开放沙滩及岸边步道",
+      "background": "沙滩、礁石、树木",
+      "light": "上午至中午",
+      "style": "自然滨海",
+      "tip": "用1倍拍全身与浪线，保留天空留白。"
+    }
+  },
+  {
+    "id": "sunlight-rock",
+    "name": "日光岩",
+    "region": "鼓浪屿",
+    "kind": "景点",
+    "summary": "可选付费景点，需要爬坡，适合体力充足时去。",
+    "photo": {
+      "area": "开放的高处观景区",
+      "background": "岛屿全景、红色屋顶",
+      "light": "中午或午后",
+      "style": "城市全景",
+      "tip": "广角拍建筑群，勿倚靠或跨越护栏。"
+    }
+  },
+  {
+    "id": "gangzaihou-beach",
+    "name": "港仔后沙滩",
+    "region": "鼓浪屿",
+    "kind": "景点",
+    "summary": "菽庄花园附近的开阔沙滩。",
+    "photo": {
+      "area": "开放沙滩",
+      "background": "海面、绿树、沙滩",
+      "light": "午后",
+      "style": "海边人物",
+      "tip": "1倍拍自然行走，留好海平线。"
+    }
+  },
+  {
+    "id": "shuzhuang-garden",
+    "name": "菽庄花园",
+    "region": "鼓浪屿",
+    "kind": "景点",
+    "summary": "海边园林，可沿开放的四十四桥一带慢走。",
+    "photo": {
+      "area": "四十四桥、开放庭院及观景区",
+      "background": "园林、石桥、海面",
+      "light": "午后",
+      "style": "温柔情侣照",
+      "tip": "2倍取桥栏和人物半身，给通行者留空间。"
+    }
+  },
+  {
+    "id": "joint-court",
+    "name": "会审公堂旧址",
+    "region": "鼓浪屿",
+    "kind": "景点",
+    "summary": "看复古外立面，内部开放待确认。",
+    "photo": {
+      "area": "笔山路公共街道",
+      "background": "旧门窗、复古建筑",
+      "light": "午后",
+      "style": "复古街景",
+      "tip": "用2倍选对称门窗，不进入未开放空间。"
+    },
+    "keyword": "鼓浪屿 会审公堂旧址 笔山路1号 3号",
+    "verification": {
+      "status": "出发前核实",
+      "source": "",
+      "checkedOn": "",
+      "note": "旧址门牌和内部开放待确认。"
+    }
+  },
+  {
+    "id": "bagua-organ-museum",
+    "name": "八卦楼风琴博物馆",
+    "region": "鼓浪屿",
+    "kind": "景点",
+    "summary": "红色圆顶地标，与管风琴艺术中心是不同场馆。",
+    "photo": {
+      "area": "建筑外开放区域",
+      "background": "红色圆顶、古典立柱",
+      "light": "午后",
+      "style": "建筑人像",
+      "tip": "1倍保留圆顶，柱间用2倍拍半身。"
+    }
+  },
+  {
+    "id": "pipe-organ-center",
+    "name": "管风琴艺术中心",
+    "region": "鼓浪屿",
+    "kind": "景点",
+    "summary": "巨型管风琴和对称空间，优先安排一场以当天公告为准的演奏。",
+    "photo": {
+      "area": "允许拍摄的开放室内区域",
+      "background": "巨型管风琴、对称空间",
+      "light": "按当天场次",
+      "style": "室内建筑人像",
+      "tip": "1倍表现空间尺度，按规定拍摄，演奏时保持安静。"
+    },
+    "keyword": "鼓浪屿 管风琴艺术中心 三明路4号",
+    "verification": {
+      "status": "出发前核实",
+      "source": "https://8gtower.glyylq.cn/article.php?id=1308",
+      "checkedOn": "2026-11-26",
+      "note": "场馆公告列三明路1–4号。09:00、10:30、12:00、14:00、15:30、17:00是旧记录，仅供核对，旅行日场次待确认。"
+    },
+    "address": "鼓浪屿三明路1–4号"
+  },
+  {
+    "id": "gulangyu-corner",
+    "name": "最美转角",
+    "region": "鼓浪屿",
+    "kind": "景点",
+    "summary": "鼓新路与三明路交叉口附近的红砖转角。",
+    "photo": {
+      "area": "交叉口人行区域",
+      "background": "红砖洋房、街巷转折",
+      "light": "下午至暮色",
+      "style": "复古街道",
+      "tip": "2倍压缩远近建筑，等通道空再拍。"
+    },
+    "keyword": "鼓浪屿 最美转角 鼓新路 三明路"
+  },
+  {
+    "id": "longtou-road",
+    "name": "龙头路及老街",
+    "region": "鼓浪屿",
+    "kind": "景点",
+    "summary": "选几家顺路小店，留足走到码头的时间。",
+    "photo": {
+      "area": "开放步行街及街巷",
+      "background": "店灯、招牌、复古街景",
+      "light": "入夜",
+      "style": "夜景纪实",
+      "tip": "面向店灯用2倍抓拍，先定候船时间。"
+    }
+  },
+  {
+    "id": "xian-flower-market",
+    "name": "溪岸路花鸟市场",
+    "region": "老城与思北",
+    "kind": "景点",
+    "summary": "最后一天可以从花店和花束开始。",
+    "photo": {
+      "area": "公共街道及店门外",
+      "background": "鲜花、花束、生活街道",
+      "light": "中午",
+      "style": "生活纪实",
+      "tip": "用2倍取花束与手部，店内先询问。"
+    }
+  },
+  {
+    "id": "park-west-road",
+    "name": "公园西路",
+    "region": "老城与思北",
+    "kind": "景点",
+    "summary": "公园旁有绿树和老城建筑。",
+    "photo": {
+      "area": "沿街公开人行道",
+      "background": "绿树、街道、老城建筑",
+      "light": "中午选树荫",
+      "style": "自然街拍",
+      "tip": "1倍沿人行道取纵深。"
+    }
+  },
+  {
+    "id": "huaxin-road",
+    "name": "华新路",
+    "region": "老城与思北",
+    "kind": "景点",
+    "summary": "老洋房和绿树小巷，适合短暂停留。",
+    "photo": {
+      "area": "公共巷道",
+      "background": "红砖外墙、绿树",
+      "light": "中午树荫下",
+      "style": "复古文艺",
+      "tip": "2倍拍半身与红墙，尊重民居。"
+    }
+  },
+  {
+    "id": "caopuwei-road",
+    "name": "草埔尾路",
+    "region": "老城与思北",
+    "kind": "景点",
+    "summary": "安静小巷与老房子，可按体力删减。",
+    "photo": {
+      "area": "公共巷道",
+      "background": "旧房、街巷",
+      "light": "中午",
+      "style": "安静街拍",
+      "tip": "1倍拍巷道和背影。"
+    }
+  },
+  {
+    "id": "xingfu-road",
+    "name": "幸福路",
+    "region": "老城与思北",
+    "kind": "景点",
+    "summary": "小店、旧招牌和老城步行路线。",
+    "photo": {
+      "area": "公开巷口、街边人行道",
+      "background": "复古招牌、特色小店",
+      "light": "中午",
+      "style": "文艺街拍",
+      "tip": "2倍取店招和轻松互动。"
+    }
+  },
+  {
+    "id": "gugong-road",
+    "name": "故宫路",
+    "region": "老城与思北",
+    "kind": "景点",
+    "summary": "老城散步和附近小吃。",
+    "photo": {
+      "area": "公开人行道",
+      "background": "街角、小店",
+      "light": "中午",
+      "style": "生活纪实",
+      "tip": "2倍取人物和街景细节。"
+    }
+  },
+  {
+    "id": "sibei",
+    "name": "思北",
+    "region": "老城与思北",
+    "kind": "景点",
+    "summary": "顺路买伴手礼，给取行李和去车站留时间。",
+    "photo": {
+      "area": "公共街道",
+      "background": "街角和手提伴手礼",
+      "light": "午间",
+      "style": "生活抓拍",
+      "tip": "用2倍拍采购后手提袋及人物。"
+    }
+  },
+  {
+    "id": "zhongshan-park",
+    "name": "中山公园",
+    "region": "老城与思北",
+    "kind": "景点",
+    "summary": "园林、绿树，按当天时间绕一点即可。",
+    "photo": {
+      "area": "开放园路",
+      "background": "绿树、园林、休闲步道",
+      "light": "中午树荫下",
+      "style": "清新人像",
+      "tip": "借树影拍1倍环境人像。"
+    }
+  },
+  {
+    "id": "bailuzhou-park",
+    "name": "白鹭洲公园",
+    "region": "老城与思北",
+    "kind": "备选",
+    "summary": "想休息或看城市湖景时选择。"
+  },
+  {
+    "id": "yundang-lake",
+    "name": "筼筜湖",
+    "region": "老城与思北",
+    "kind": "备选",
+    "summary": "湖边放松，按取行李与车站时间决定。"
+  },
+  {
+    "id": "tuihua-park",
+    "name": "退化公园",
+    "region": "老城与思北",
+    "kind": "备选",
+    "summary": "曾记录的周边打卡区域，目前位置及开放待确认。",
+    "verification": {
+      "status": "出发前核实",
+      "source": "",
+      "checkedOn": "",
+      "note": "当前位置及开放情况待确认。"
+    }
+  },
+  {
+    "id": "botanical-garden",
+    "name": "厦门园林植物园",
+    "region": "厦门岛",
+    "kind": "备选",
+    "summary": "仙人掌和热带植物摄影，通常需要较长游览时间。"
+  },
+  {
+    "id": "zhonggu-cableway",
+    "name": "钟鼓索道",
+    "region": "厦门岛",
+    "kind": "备选",
+    "summary": "看海岸和城市高处视野，受天气影响。"
+  },
+  {
+    "id": "railway-park",
+    "name": "铁路文化公园",
+    "region": "厦门岛",
+    "kind": "备选",
+    "summary": "绿荫、旧铁轨，适合轻松散步。"
+  },
+  {
+    "id": "wuyuan-wetland",
+    "name": "五缘湾湿地公园",
+    "region": "厦门岛",
+    "kind": "备选",
+    "summary": "湿地自然景观，适合另留散步时间。"
+  },
+  {
+    "id": "sm-mall",
+    "name": "SM城市广场",
+    "region": "厦门岛",
+    "kind": "备选",
+    "summary": "雨天购物与室内休息。"
+  },
+  {
+    "id": "science-museum",
+    "name": "厦门科技馆",
+    "region": "厦门岛",
+    "kind": "备选",
+    "summary": "雨天室内活动，先看开放与票务。"
+  },
+  {
+    "id": "garden-expo",
+    "name": "园博苑",
+    "region": "集美及岛外",
+    "kind": "备选",
+    "summary": "园区较大，宜单独留半天。"
+  },
+  {
+    "id": "haicang-bay",
+    "name": "海沧湾公园",
+    "region": "集美及岛外",
+    "kind": "备选",
+    "summary": "岛外海湾，跨区交通需额外留时。"
+  },
+  {
+    "id": "rainbow-beach",
+    "name": "彩虹沙滩",
+    "region": "集美及岛外",
+    "kind": "备选",
+    "summary": "岛外海滩，宜另留半天。"
+  },
+  {
+    "id": "dihuazhou",
+    "name": "荻花洲",
+    "region": "集美及岛外",
+    "kind": "备选",
+    "summary": "宜单独规划半天，具体游览入口待确认。"
+  },
+  {
+    "id": "old-courtyard",
+    "name": "老院子",
+    "region": "集美及岛外",
+    "kind": "备选",
+    "summary": "较偏离主路线，宜另留半天。"
+  },
+  {
+    "id": "tongan-studio",
+    "name": "同安影视城",
+    "region": "集美及岛外",
+    "kind": "备选",
+    "summary": "距离远，需要单独半天及以上。"
+  },
+  {
+    "id": "yunding-mountain",
+    "name": "云顶山",
+    "region": "集美及岛外",
+    "kind": "备选",
+    "summary": "距离远，建议独立安排一天。"
+  },
+  {
+    "id": "fantian-temple",
+    "name": "梵天禅寺",
+    "region": "集美及岛外",
+    "kind": "备选",
+    "summary": "同安方向，宜留额外半天。"
+  },
+  {
+    "id": "tianzhushan",
+    "name": "天竺山",
+    "region": "集美及岛外",
+    "kind": "备选",
+    "summary": "跨区登山，宜独立安排半天至一天。"
+  },
+  {
+    "id": "beichen-mountain",
+    "name": "北辰山",
+    "region": "集美及岛外",
+    "kind": "备选",
+    "summary": "跨区，宜单独安排半天至一天。"
+  }
+]

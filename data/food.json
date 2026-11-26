@@ -1,0 +1,1087 @@
+[
+  {
+    "id": "ajie-wuxiang",
+    "name": "阿杰五香",
+    "kind": "小吃",
+    "recommended": "炸五香卷",
+    "region": "八市",
+    "group": "八市",
+    "address": "开禾路111号",
+    "placeIds": [
+      "bashi",
+      "kaihe-road",
+      "yingping-road"
+    ],
+    "moduleIds": [
+      "arrival",
+      "jimei"
+    ],
+    "priority": "顺路",
+    "verification": {
+      "status": "待确认",
+      "source": "",
+      "checkedOn": "",
+      "note": "地址为已有记录，营业状态待确认。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "ajie-shacha",
+    "name": "阿杰店沙茶面",
+    "kind": "小吃",
+    "recommended": "沙茶面",
+    "region": "八市",
+    "group": "八市",
+    "address": "",
+    "placeIds": [
+      "bashi",
+      "kaihe-road",
+      "yingping-road"
+    ],
+    "moduleIds": [
+      "arrival",
+      "jimei"
+    ],
+    "priority": "顺路",
+    "verification": {
+      "status": "待确认",
+      "source": "",
+      "checkedOn": "",
+      "note": "具体门牌或经营点待确认。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "shangqing-seafood",
+    "name": "尚青海鲜加工",
+    "kind": "正餐",
+    "recommended": "自选时令海鲜",
+    "region": "八市",
+    "group": "八市",
+    "address": "",
+    "placeIds": [
+      "bashi",
+      "kaihe-road",
+      "yingping-road"
+    ],
+    "moduleIds": [
+      "arrival",
+      "jimei"
+    ],
+    "priority": "正餐备选",
+    "verification": {
+      "status": "待确认",
+      "source": "",
+      "checkedOn": "",
+      "note": "海鲜先确认按份或按重量计价和加工费。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "zheng-congee",
+    "name": "郑有财砂锅粥",
+    "kind": "正餐",
+    "recommended": "海鲜砂锅粥",
+    "region": "八市",
+    "group": "八市",
+    "address": "",
+    "placeIds": [
+      "bashi",
+      "kaihe-road",
+      "yingping-road"
+    ],
+    "moduleIds": [
+      "arrival",
+      "jimei"
+    ],
+    "priority": "顺路",
+    "verification": {
+      "status": "待确认",
+      "source": "",
+      "checkedOn": "",
+      "note": "具体门牌或经营点待确认。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "haoxiang-skewer",
+    "name": "豪香里脊肉串",
+    "kind": "小吃",
+    "recommended": "里脊肉串",
+    "region": "八市",
+    "group": "八市",
+    "address": "大中路1号",
+    "placeIds": [
+      "bashi",
+      "kaihe-road",
+      "yingping-road"
+    ],
+    "moduleIds": [
+      "arrival",
+      "jimei"
+    ],
+    "priority": "顺路",
+    "verification": {
+      "status": "待确认",
+      "source": "",
+      "checkedOn": "",
+      "note": "地址为已有记录，营业状态待确认。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "zhu-chicken",
+    "name": "朱记手撕鸡",
+    "kind": "小吃",
+    "recommended": "手撕鸡",
+    "region": "八市",
+    "group": "八市",
+    "address": "",
+    "placeIds": [
+      "bashi",
+      "kaihe-road",
+      "yingping-road"
+    ],
+    "moduleIds": [
+      "arrival",
+      "jimei"
+    ],
+    "priority": "顺路",
+    "verification": {
+      "status": "待确认",
+      "source": "",
+      "checkedOn": "",
+      "note": "具体门牌或经营点待确认。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "zhong-pancake",
+    "name": "钟丽君满煎糕",
+    "kind": "小吃",
+    "recommended": "满煎糕",
+    "region": "八市",
+    "group": "八市",
+    "address": "",
+    "placeIds": [
+      "bashi",
+      "kaihe-road",
+      "yingping-road"
+    ],
+    "moduleIds": [
+      "arrival",
+      "jimei"
+    ],
+    "priority": "顺路",
+    "verification": {
+      "status": "待确认",
+      "source": "",
+      "checkedOn": "",
+      "note": "具体门牌或经营点待确认。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "lian-oyster",
+    "name": "莲欢海蛎煎",
+    "kind": "小吃",
+    "recommended": "海蛎煎",
+    "region": "中山路",
+    "group": "中山路",
+    "address": "局口横巷6号",
+    "placeIds": [
+      "zhongshan-road",
+      "china-city"
+    ],
+    "moduleIds": [
+      "arrival",
+      "jimei"
+    ],
+    "priority": "顺路",
+    "verification": {
+      "status": "待确认",
+      "source": "",
+      "checkedOn": "",
+      "note": "地址为已有记录，营业状态待确认。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "rice-1980",
+    "name": "1980烧肉粽",
+    "kind": "小吃",
+    "recommended": "闽南烧肉粽、沙茶面",
+    "region": "中山路",
+    "group": "中山路",
+    "address": "",
+    "placeIds": [
+      "zhongshan-road",
+      "china-city"
+    ],
+    "moduleIds": [
+      "arrival",
+      "jimei"
+    ],
+    "priority": "顺路",
+    "verification": {
+      "status": "待确认",
+      "source": "",
+      "checkedOn": "",
+      "note": "具体门牌或经营点待确认。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "huang-peanut",
+    "name": "黄则和",
+    "kind": "小吃",
+    "recommended": "花生汤、闽南传统点心",
+    "region": "中山路",
+    "group": "中山路",
+    "address": "",
+    "placeIds": [
+      "zhongshan-road",
+      "china-city"
+    ],
+    "moduleIds": [
+      "arrival",
+      "jimei"
+    ],
+    "priority": "顺路",
+    "verification": {
+      "status": "待确认",
+      "source": "",
+      "checkedOn": "",
+      "note": "具体门牌或经营点待确认。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "cuida-china-city",
+    "name": "CUIDA 中华城店",
+    "kind": "饮品",
+    "recommended": "黑糖碎冰冰／黑糖碎碎冰",
+    "region": "中山路",
+    "group": "中山路",
+    "address": "中华城北区B1080号",
+    "placeIds": [
+      "zhongshan-road",
+      "china-city"
+    ],
+    "moduleIds": [
+      "arrival",
+      "jimei"
+    ],
+    "priority": "顺路",
+    "verification": {
+      "status": "待确认",
+      "source": "https://51sjxx.com/wen/3669.html",
+      "checkedOn": "2026-11-26",
+      "note": "公开目录列同址，仍需核对营业。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "zhufugui-zhongshan",
+    "name": "朱富贵海鲜火锅 · 中山路老虎城店",
+    "kind": "正餐",
+    "recommended": "自选海鲜火锅",
+    "region": "中山路",
+    "group": "中山路",
+    "address": "",
+    "placeIds": [
+      "zhongshan-road",
+      "china-city"
+    ],
+    "moduleIds": [
+      "arrival",
+      "jimei"
+    ],
+    "priority": "正餐备选",
+    "verification": {
+      "status": "待确认",
+      "source": "",
+      "checkedOn": "",
+      "note": "分店营业待确认，问清按份、按重量及加工费。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "zhufugui-station",
+    "name": "朱富贵海鲜火锅 · 厦门火车站禹悦汇店",
+    "kind": "正餐",
+    "recommended": "自选海鲜火锅",
+    "region": "厦门站",
+    "group": "交通站点",
+    "address": "禹悦汇A馆5楼",
+    "placeIds": [
+      "xiamen-station"
+    ],
+    "moduleIds": [
+      "arrival"
+    ],
+    "priority": "正餐备选",
+    "verification": {
+      "status": "待确认",
+      "source": "",
+      "checkedOn": "",
+      "note": "分店营业待确认，问清按份、按重量及加工费。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "wang-cake",
+    "name": "王记仙豆糕",
+    "kind": "甜点",
+    "recommended": "仙豆糕",
+    "region": "集美石鼓路",
+    "group": "集美",
+    "address": "",
+    "placeIds": [
+      "shigu-road",
+      "jimei-dashe"
+    ],
+    "moduleIds": [
+      "jimei"
+    ],
+    "priority": "顺路",
+    "verification": {
+      "status": "待确认",
+      "source": "",
+      "checkedOn": "",
+      "note": "具体门牌或经营点待确认。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "papa-bakery",
+    "name": "帕帕烘焙",
+    "kind": "烘焙",
+    "recommended": "板栗酥饼",
+    "region": "集美石鼓路",
+    "group": "集美",
+    "address": "石鼓路95号之二附近",
+    "placeIds": [
+      "shigu-road",
+      "jimei-dashe"
+    ],
+    "moduleIds": [
+      "jimei"
+    ],
+    "priority": "顺路",
+    "verification": {
+      "status": "待确认",
+      "source": "",
+      "checkedOn": "",
+      "note": "地址为已有记录，营业状态待确认。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "shangguan-dessert",
+    "name": "上官四果汤",
+    "kind": "甜点",
+    "recommended": "四果汤、阿达子、石花膏",
+    "region": "石鼓路或中山路",
+    "group": "集美或中山路",
+    "address": "",
+    "placeIds": [
+      "shigu-road",
+      "zhongshan-road"
+    ],
+    "moduleIds": [
+      "arrival",
+      "jimei"
+    ],
+    "priority": "顺路",
+    "verification": {
+      "status": "待确认",
+      "source": "",
+      "checkedOn": "",
+      "note": "分店及菜单待确认，找顺路的一家。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "nanputuo-noodles",
+    "name": "南普陀素面",
+    "kind": "小吃",
+    "recommended": "素面",
+    "region": "南普陀与厦大",
+    "group": "南普陀与厦大",
+    "address": "",
+    "placeIds": [
+      "nanputuo",
+      "xmu-exterior"
+    ],
+    "moduleIds": [
+      "coast"
+    ],
+    "priority": "顺路",
+    "verification": {
+      "status": "待确认",
+      "source": "",
+      "checkedOn": "",
+      "note": "具体门牌或经营点待确认。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "jinhaiwan",
+    "name": "金海湾厦门海鲜菜",
+    "kind": "正餐",
+    "recommended": "姜母鸭、海鲜菜",
+    "region": "南普陀与厦大",
+    "group": "南普陀与厦大",
+    "address": "思明区厦大西村25-102号",
+    "placeIds": [
+      "nanputuo",
+      "xmu-exterior"
+    ],
+    "moduleIds": [
+      "coast"
+    ],
+    "priority": "正餐备选",
+    "verification": {
+      "status": "待确认",
+      "source": "",
+      "checkedOn": "",
+      "note": "门牌为旅行记录。海鲜问清计价和加工费。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "fishing-boat",
+    "name": "打鱼船厦门菜",
+    "kind": "正餐",
+    "recommended": "姜母鸭",
+    "region": "大学路及厦大周边",
+    "group": "南普陀与厦大",
+    "address": "思明区大学路183号",
+    "placeIds": [
+      "nanputuo",
+      "xmu-exterior",
+      "shapowei-art",
+      "shapowei-harbor"
+    ],
+    "moduleIds": [
+      "jimei",
+      "coast"
+    ],
+    "priority": "正餐备选",
+    "verification": {
+      "status": "待确认",
+      "source": "",
+      "checkedOn": "",
+      "note": "沙坡尾晚餐或南普陀后午餐备选，门牌为旅行记录。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "chamanfangting-xmu",
+    "name": "茶满方庭 · 厦门大学店",
+    "kind": "饮品",
+    "recommended": "墨染兰亭（或墨染兰庭）、苹果大红袍、焦糖奶盖碎冰冰／碎碎冰",
+    "region": "大学路及厦大周边",
+    "group": "南普陀与厦大",
+    "address": "演武路4号厦大访客中心",
+    "placeIds": [
+      "nanputuo",
+      "xmu-exterior",
+      "shapowei-art",
+      "shapowei-harbor"
+    ],
+    "moduleIds": [
+      "jimei",
+      "coast"
+    ],
+    "priority": "顺路",
+    "verification": {
+      "status": "待确认",
+      "source": "https://m.city8.com/xm/cater/8a25ua729gfhb279ac",
+      "checkedOn": "2026-11-26",
+      "note": "地图目录列同址；门店、营业与菜单仍待确认。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "buzai-drinks",
+    "name": "不在书店饮品 · 黄厝",
+    "kind": "饮品",
+    "recommended": "临海休息、饮品",
+    "region": "环岛路与黄厝",
+    "group": "环岛路",
+    "address": "环岛南路2695号",
+    "placeIds": [
+      "buzai-bookstore",
+      "wanyue-slope",
+      "huangcuo-beach"
+    ],
+    "moduleIds": [
+      "coast"
+    ],
+    "priority": "顺路",
+    "verification": {
+      "status": "待确认",
+      "source": "https://www.amap.com/place/B0FFLO087B",
+      "checkedOn": "2026-11-26",
+      "note": "高德列有同址书店。旅行日营业及饮品待确认。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "seaside-coffee",
+    "name": "厦门海景咖啡",
+    "kind": "随缘",
+    "recommended": "沿海当日营业的咖啡馆",
+    "region": "环岛路与黄厝",
+    "group": "环岛路",
+    "address": "",
+    "placeIds": [
+      "buzai-bookstore",
+      "wanyue-slope",
+      "huangcuo-beach"
+    ],
+    "moduleIds": [
+      "coast"
+    ],
+    "priority": "随缘",
+    "verification": {
+      "status": "待确认",
+      "source": "",
+      "checkedOn": "",
+      "note": "沿线按营业筛选，无指定店铺。先查店面及位置再出发。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "anniversary-ginger-duck",
+    "name": "姜母鸭 · 晚餐候选",
+    "kind": "随缘",
+    "recommended": "姜母鸭",
+    "region": "按当天所在区域",
+    "group": "纪念日晚餐",
+    "address": "",
+    "placeIds": [
+      "huangcuo-beach",
+      "jimei-dashe",
+      "longtou-road",
+      "zhongshan-road"
+    ],
+    "moduleIds": [
+      "coast"
+    ],
+    "priority": "正餐备选",
+    "verification": {
+      "status": "待确认",
+      "source": "",
+      "checkedOn": "",
+      "note": "没有指定预订，优先就近选择。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "anniversary-seafood",
+    "name": "厦门海鲜菜 · 晚餐候选",
+    "kind": "随缘",
+    "recommended": "时令海鲜",
+    "region": "按当天所在区域",
+    "group": "纪念日晚餐",
+    "address": "",
+    "placeIds": [
+      "huangcuo-beach",
+      "jimei-dashe",
+      "longtou-road",
+      "zhongshan-road"
+    ],
+    "moduleIds": [
+      "coast"
+    ],
+    "priority": "正餐备选",
+    "verification": {
+      "status": "待确认",
+      "source": "",
+      "checkedOn": "",
+      "note": "确认计价与加工费，优先就近。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "anniversary-hotpot",
+    "name": "朱富贵海鲜火锅 · 晚餐候选",
+    "kind": "正餐",
+    "recommended": "海鲜自选火锅",
+    "region": "按当天所在区域",
+    "group": "纪念日晚餐",
+    "address": "",
+    "placeIds": [
+      "huangcuo-beach",
+      "jimei-dashe",
+      "longtou-road",
+      "zhongshan-road"
+    ],
+    "moduleIds": [
+      "coast"
+    ],
+    "priority": "正餐备选",
+    "verification": {
+      "status": "待确认",
+      "source": "",
+      "checkedOn": "",
+      "note": "实际分店与营业待确认，优先就近。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "yeshi-mochi",
+    "name": "叶氏麻糍",
+    "kind": "小吃",
+    "recommended": "花生芝麻麻糍",
+    "region": "鼓浪屿龙头路",
+    "group": "鼓浪屿",
+    "address": "龙头路145号附近",
+    "placeIds": [
+      "longtou-road"
+    ],
+    "moduleIds": [
+      "gulangyu"
+    ],
+    "priority": "顺路",
+    "verification": {
+      "status": "待确认",
+      "source": "https://www.amap.com/place/B0FFLBPDII",
+      "checkedOn": "2026-11-26",
+      "note": "高德列147号，原记录约145号。摊位和营业以现场为准。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "island-fishballs",
+    "name": "鱼丸汤",
+    "kind": "随缘",
+    "recommended": "闽南鱼丸汤",
+    "region": "鼓浪屿龙头路",
+    "group": "鼓浪屿",
+    "address": "",
+    "placeIds": [
+      "longtou-road"
+    ],
+    "moduleIds": [
+      "gulangyu"
+    ],
+    "priority": "随缘",
+    "verification": {
+      "status": "待确认",
+      "source": "",
+      "checkedOn": "",
+      "note": "到龙头路按营业就近选择。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "island-snacks",
+    "name": "鼓浪屿闽南小吃",
+    "kind": "随缘",
+    "recommended": "闽南小吃",
+    "region": "鼓浪屿龙头路",
+    "group": "鼓浪屿",
+    "address": "",
+    "placeIds": [
+      "longtou-road"
+    ],
+    "moduleIds": [
+      "gulangyu"
+    ],
+    "priority": "随缘",
+    "verification": {
+      "status": "待确认",
+      "source": "",
+      "checkedOn": "",
+      "note": "不指定摊位。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "island-coffee",
+    "name": "鼓浪屿甜品与咖啡",
+    "kind": "随缘",
+    "recommended": "甜品、咖啡",
+    "region": "鼓浪屿龙头路",
+    "group": "鼓浪屿",
+    "address": "",
+    "placeIds": [
+      "longtou-road"
+    ],
+    "moduleIds": [
+      "gulangyu"
+    ],
+    "priority": "随缘",
+    "verification": {
+      "status": "待确认",
+      "source": "",
+      "checkedOn": "",
+      "note": "按当天营业就近选择。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "luchao-meal",
+    "name": "鹭潮美院周边餐饮",
+    "kind": "随缘",
+    "recommended": "午餐、咖啡",
+    "region": "鼓浪屿内厝澳",
+    "group": "鼓浪屿",
+    "address": "",
+    "placeIds": [
+      "luchao-art-school",
+      "neicuoao-ferry"
+    ],
+    "moduleIds": [
+      "gulangyu"
+    ],
+    "priority": "随缘",
+    "verification": {
+      "status": "待确认",
+      "source": "",
+      "checkedOn": "",
+      "note": "有时间再查看康泰路顺路的营业店铺。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "sanzhen",
+    "name": "三真丸子美食坊",
+    "kind": "小吃",
+    "recommended": "丸子、闽南小吃",
+    "region": "幸福路、故宫路与思北",
+    "group": "思北与老城",
+    "address": "思明区故宫路84号",
+    "placeIds": [
+      "xingfu-road",
+      "gugong-road",
+      "sibei"
+    ],
+    "moduleIds": [
+      "departure"
+    ],
+    "priority": "顺路",
+    "verification": {
+      "status": "待确认",
+      "source": "",
+      "checkedOn": "",
+      "note": "靠近幸福路交界的记录可能指同一店，未另列分店。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "caiwan",
+    "name": "菜丸妈妈",
+    "kind": "小吃",
+    "recommended": "菜丸、闽南小吃",
+    "region": "幸福路、故宫路与思北",
+    "group": "思北与老城",
+    "address": "故宫路26号",
+    "placeIds": [
+      "xingfu-road",
+      "gugong-road",
+      "sibei"
+    ],
+    "moduleIds": [
+      "departure"
+    ],
+    "priority": "顺路",
+    "verification": {
+      "status": "待确认",
+      "source": "",
+      "checkedOn": "",
+      "note": "地址为已有记录，营业状态待确认。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "danxiang",
+    "name": "丹香烘焙坊",
+    "kind": "伴手礼",
+    "recommended": "海绵蛋糕、葡萄吐司",
+    "region": "幸福路、故宫路与思北",
+    "group": "思北与老城",
+    "address": "厦禾路296号-107号",
+    "placeIds": [
+      "xingfu-road",
+      "gugong-road",
+      "sibei"
+    ],
+    "moduleIds": [
+      "departure"
+    ],
+    "priority": "顺路",
+    "verification": {
+      "status": "待确认",
+      "source": "",
+      "checkedOn": "",
+      "note": "地址为已有记录，营业状态待确认。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "sibei-bread",
+    "name": "思北特香包",
+    "kind": "伴手礼",
+    "recommended": "特香包",
+    "region": "幸福路、故宫路与思北",
+    "group": "思北与老城",
+    "address": "厦禾路296-134号",
+    "placeIds": [
+      "xingfu-road",
+      "gugong-road",
+      "sibei"
+    ],
+    "moduleIds": [
+      "departure"
+    ],
+    "priority": "顺路",
+    "verification": {
+      "status": "待确认",
+      "source": "",
+      "checkedOn": "",
+      "note": "地址为已有记录，营业状态待确认。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "cuida-sibei",
+    "name": "CUIDA 思北店",
+    "kind": "饮品",
+    "recommended": "黑糖碎冰冰／黑糖碎碎冰",
+    "region": "幸福路、故宫路与思北",
+    "group": "思北与老城",
+    "address": "厦禾路296-101号",
+    "placeIds": [
+      "xingfu-road",
+      "gugong-road",
+      "sibei"
+    ],
+    "moduleIds": [
+      "departure"
+    ],
+    "priority": "顺路",
+    "verification": {
+      "status": "待确认",
+      "source": "",
+      "checkedOn": "",
+      "note": "地址为已有记录，营业状态待确认。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "northwest-noodles",
+    "name": "西北拉面 · 干拌面",
+    "kind": "随缘",
+    "recommended": "干拌拉面、干拌牛肉面",
+    "region": "幸福路、故宫路与思北",
+    "group": "思北与老城",
+    "address": "",
+    "placeIds": [
+      "xingfu-road",
+      "gugong-road",
+      "sibei"
+    ],
+    "moduleIds": [
+      "departure"
+    ],
+    "priority": "随缘",
+    "verification": {
+      "status": "待确认",
+      "source": "",
+      "checkedOn": "",
+      "note": "询问顺路的普通西北拉面馆或兰州牛肉面馆，不指定店铺。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "cuida-hexiang",
+    "name": "CUIDA 禾祥西店",
+    "kind": "饮品",
+    "recommended": "黑糖碎冰冰／黑糖碎碎冰",
+    "region": "厦门本岛",
+    "group": "随缘收藏",
+    "address": "禾祥西路204号之112号",
+    "placeIds": [],
+    "moduleIds": [],
+    "priority": "低优先级",
+    "verification": {
+      "status": "待确认",
+      "source": "https://hk.trip.com/restaurant/china/xiamen/detail/restaurant-130943826/",
+      "checkedOn": "2026-11-26",
+      "note": "旅行目录列有禾祥西分店，门牌和当日营业仍待核实。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "zhangzhou-blanch",
+    "name": "漳州圆圈生烫",
+    "kind": "随缘",
+    "recommended": "生烫",
+    "region": "厦门本岛",
+    "group": "随缘收藏",
+    "address": "",
+    "placeIds": [],
+    "moduleIds": [],
+    "priority": "低优先级",
+    "verification": {
+      "status": "待确认",
+      "source": "",
+      "checkedOn": "",
+      "note": "具体店铺及营业未核实。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "adazi",
+    "name": "阿达子",
+    "kind": "随缘",
+    "recommended": "四果汤配料或闽南甜品",
+    "region": "厦门本岛",
+    "group": "随缘收藏",
+    "address": "",
+    "placeIds": [],
+    "moduleIds": [],
+    "priority": "低优先级",
+    "verification": {
+      "status": "待确认",
+      "source": "",
+      "checkedOn": "",
+      "note": "四果汤配料以现场为准。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "weilin-dessert",
+    "name": "涠霖甜品",
+    "kind": "甜点",
+    "recommended": "甜品",
+    "region": "沙坡尾",
+    "group": "随缘收藏",
+    "address": "",
+    "placeIds": [
+      "shapowei-art",
+      "shapowei-harbor"
+    ],
+    "moduleIds": [
+      "jimei"
+    ],
+    "priority": "低优先级",
+    "verification": {
+      "status": "待确认",
+      "source": "",
+      "checkedOn": "",
+      "note": "具体门牌或经营点待确认。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "chenggong-mala",
+    "name": "成功大道麻辣烫",
+    "kind": "小吃",
+    "recommended": "麻辣烫",
+    "region": "沙坡尾",
+    "group": "随缘收藏",
+    "address": "",
+    "placeIds": [
+      "shapowei-art",
+      "shapowei-harbor"
+    ],
+    "moduleIds": [
+      "jimei"
+    ],
+    "priority": "低优先级",
+    "verification": {
+      "status": "待确认",
+      "source": "",
+      "checkedOn": "",
+      "note": "具体门牌或经营点待确认。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "xianqi",
+    "name": "先启半步颠",
+    "kind": "正餐",
+    "recommended": "川菜",
+    "region": "厦门本岛",
+    "group": "随缘收藏",
+    "address": "",
+    "placeIds": [],
+    "moduleIds": [],
+    "priority": "低优先级",
+    "verification": {
+      "status": "待确认",
+      "source": "",
+      "checkedOn": "",
+      "note": "宝龙、SM二期为旧候选，实际分店待确认。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  },
+  {
+    "id": "xinchao",
+    "name": "鑫朝刘汤包",
+    "kind": "小吃",
+    "recommended": "汤包",
+    "region": "厦门本岛",
+    "group": "随缘收藏",
+    "address": "",
+    "placeIds": [],
+    "moduleIds": [],
+    "priority": "低优先级",
+    "verification": {
+      "status": "待确认",
+      "source": "",
+      "checkedOn": "",
+      "note": "莲花路口附近，门牌和营业待确认。"
+    },
+    "favorite": false,
+    "checkIn": "pending"
+  }
+]

@@ -1,0 +1,708 @@
+{
+  "dates": [
+    "2026-11-28",
+    "2026-11-29",
+    "2026-11-30",
+    "2026-12-01",
+    "2026-12-02"
+  ],
+  "anniversary": "2026-11-30",
+  "modules": [
+    {
+      "id": "arrival",
+      "title": "初见厦门",
+      "accent": "old-town",
+      "area": "八市 · 中山路",
+      "departure": "下午抵达后",
+      "route": [
+        "xiamen-station",
+        "stay",
+        "bashi",
+        "zhongshan-road",
+        "china-city",
+        "stay"
+      ],
+      "reminders": [
+        "八市部分传统摊位晚上收摊，先去八市再逛中山路。",
+        "入住后再出门，晚间随体力返回酒店。"
+      ],
+      "itinerary": [
+        {
+          "id": "xiamen-station",
+          "time": "下午",
+          "duration": "按实际车次",
+          "priority": "交通"
+        },
+        {
+          "id": "stay",
+          "time": "抵达后",
+          "duration": "预留入住时间",
+          "priority": "交通"
+        },
+        {
+          "id": "bashi",
+          "time": "17:30",
+          "duration": "30分钟",
+          "priority": "核心"
+        },
+        {
+          "id": "kaihe-road",
+          "time": "18:00",
+          "duration": "20分钟",
+          "priority": "顺路"
+        },
+        {
+          "id": "yingping-road",
+          "time": "18:20",
+          "duration": "20分钟",
+          "priority": "顺路"
+        },
+        {
+          "id": "zhongshan-road",
+          "time": "19:00",
+          "duration": "约1小时",
+          "priority": "核心"
+        },
+        {
+          "id": "china-city",
+          "time": "20:00",
+          "duration": "30–60分钟",
+          "priority": "顺路"
+        },
+        {
+          "id": "stay",
+          "time": "21:30后",
+          "duration": "自由活动",
+          "priority": "交通"
+        }
+      ]
+    },
+    {
+      "id": "jimei",
+      "title": "海边列车与老街",
+      "accent": "jimei",
+      "area": "集美学村 · 中山路 · 沙坡尾",
+      "departure": "09:00",
+      "route": [
+        "stay",
+        "jimei-dragon-boat-pool",
+        "jimei-dashe",
+        "shigu-road",
+        "haidi-road",
+        "ten-mile-dike",
+        "zhongshan-road",
+        "shapowei-art",
+        "shapowei-harbor",
+        "stay"
+      ],
+      "reminders": [
+        "殿前与清水宫二选一或跳过。地铁1号线可去集美。",
+        "11月底日落参考约17:18，以当天为准。时间紧先跳过可选点和重复的中山路，保留十里长堤。",
+        "沙坡尾不为旅游小吃绕路。",
+        "跨区域优先打车，也可走地铁；不进入铁路及机场限制区域。"
+      ],
+      "itinerary": [
+        {
+          "id": "stay",
+          "time": "09:00",
+          "duration": "酒店出发",
+          "priority": "交通"
+        },
+        {
+          "id": "dianqian-exit-five",
+          "time": "09:30–10:15",
+          "duration": "与清水宫二选一",
+          "priority": "可选"
+        },
+        {
+          "id": "qingshui-palace",
+          "time": "09:30–10:15",
+          "duration": "与殿前二选一",
+          "priority": "可选"
+        },
+        {
+          "id": "jimei-village",
+          "time": "10:45",
+          "duration": "开放区域随走",
+          "priority": "顺路"
+        },
+        {
+          "id": "jimei-dragon-boat-pool",
+          "time": "10:45–11:45",
+          "duration": "与南堤合计1小时",
+          "priority": "核心"
+        },
+        {
+          "id": "nanxun-lou",
+          "time": "11:00",
+          "duration": "外观约10分钟",
+          "priority": "顺路"
+        },
+        {
+          "id": "south-dike-park",
+          "time": "11:20",
+          "duration": "约20分钟",
+          "priority": "顺路"
+        },
+        {
+          "id": "jiageng-park",
+          "time": "11:45",
+          "duration": "约25分钟",
+          "priority": "可选"
+        },
+        {
+          "id": "aoyuan",
+          "time": "12:10",
+          "duration": "约20分钟",
+          "priority": "可选"
+        },
+        {
+          "id": "jimei-dashe",
+          "time": "12:30",
+          "duration": "约1小时",
+          "priority": "核心"
+        },
+        {
+          "id": "shigu-road",
+          "time": "13:30",
+          "duration": "约1小时",
+          "priority": "核心"
+        },
+        {
+          "id": "haidi-road",
+          "time": "14:45–15:45",
+          "duration": "约1小时",
+          "priority": "核心"
+        },
+        {
+          "id": "ten-mile-dike",
+          "time": "16:00–17:20",
+          "duration": "约80分钟",
+          "priority": "核心"
+        },
+        {
+          "id": "zhongshan-road",
+          "time": "18:30–19:30",
+          "duration": "约1小时",
+          "priority": "可选"
+        },
+        {
+          "id": "shapowei-art",
+          "time": "20:00",
+          "duration": "约1小时",
+          "priority": "核心"
+        },
+        {
+          "id": "shapowei-harbor",
+          "time": "21:00",
+          "duration": "约1小时",
+          "priority": "核心"
+        },
+        {
+          "id": "stay",
+          "time": "22:00后",
+          "duration": "按体力返回",
+          "priority": "交通"
+        }
+      ]
+    },
+    {
+      "id": "coast",
+      "title": "我们的周年纪念日",
+      "swapTitle": "南普陀与环岛路",
+      "accent": "coast",
+      "area": "南普陀 · 环岛路 · 黄厝海滩",
+      "departure": "08:30–09:00",
+      "route": [
+        "stay",
+        "nanputuo",
+        "yanwu-platform",
+        "pangui-tower",
+        "wanyue-slope",
+        "huangcuo-beach"
+      ],
+      "reminders": [
+        "环岛路挑几段走，跨区域用打车。时间不足时删减炮台、商业街和重复海滩。",
+        "南普陀预约、海边风力与书店营业出发前核实。黄厝朝东，适合拍暮色。",
+        "猫街按兴趣顺路看。若傍晚天气变化，优先保留盼归塔、玩月坡或黄厝其中一两处。"
+      ],
+      "itinerary": [
+        {
+          "id": "stay",
+          "time": "08:30–09:00",
+          "duration": "从住宿点出发",
+          "priority": "交通"
+        },
+        {
+          "id": "nanputuo",
+          "time": "09:00–10:30",
+          "duration": "约90分钟",
+          "priority": "核心"
+        },
+        {
+          "id": "xmu-exterior",
+          "time": "10:45",
+          "duration": "看一眼外观",
+          "priority": "顺路"
+        },
+        {
+          "id": "cat-street",
+          "time": "10:45–11:30 间",
+          "duration": "经过再决定",
+          "priority": "可选"
+        },
+        {
+          "id": "yanwu-platform",
+          "time": "10:45–11:30",
+          "duration": "预留约30分钟",
+          "priority": "核心"
+        },
+        {
+          "id": "baicheng-beach",
+          "time": "11:30–12:30",
+          "duration": "约30分钟",
+          "priority": "顺路"
+        },
+        {
+          "id": "hulishan-fort",
+          "time": "12:00",
+          "duration": "按购票及兴趣",
+          "priority": "可选"
+        },
+        {
+          "id": "pearl-bay",
+          "time": "12:30",
+          "duration": "约20分钟",
+          "priority": "顺路"
+        },
+        {
+          "id": "zengcuoan",
+          "time": "13:00",
+          "duration": "经过、休息",
+          "priority": "顺路"
+        },
+        {
+          "id": "tianquan-square",
+          "time": "13:30",
+          "duration": "与盼归塔连逛",
+          "priority": "顺路"
+        },
+        {
+          "id": "pangui-tower",
+          "time": "13:30–14:45",
+          "duration": "约40分钟",
+          "priority": "核心"
+        },
+        {
+          "id": "music-square",
+          "time": "14:45",
+          "duration": "约15分钟",
+          "priority": "顺路"
+        },
+        {
+          "id": "xitouxia",
+          "time": "15:00",
+          "duration": "约15分钟",
+          "priority": "顺路"
+        },
+        {
+          "id": "haiyuntai",
+          "time": "15:15",
+          "duration": "约10分钟",
+          "priority": "顺路"
+        },
+        {
+          "id": "buzai-bookstore",
+          "time": "15:30",
+          "duration": "营业待确认",
+          "priority": "可选"
+        },
+        {
+          "id": "wanyue-slope",
+          "time": "15:45–16:15",
+          "duration": "约30分钟",
+          "priority": "核心"
+        },
+        {
+          "id": "huangcuo-beach",
+          "time": "16:15–17:20",
+          "duration": "约1小时",
+          "priority": "核心"
+        },
+        {
+          "id": "yefengzhai",
+          "time": "17:20后",
+          "duration": "按体力决定",
+          "priority": "可选"
+        }
+      ]
+    },
+    {
+      "id": "gulangyu",
+      "title": "漫步鼓浪屿",
+      "accent": "island",
+      "area": "内厝澳 · 鼓浪屿 · 三丘田",
+      "departure": "08:45",
+      "route": [
+        "dongdu-ferry",
+        "neicuoao-ferry",
+        "luchao-art-school",
+        "gulang-stone",
+        "meihua-beach",
+        "shuzhuang-garden",
+        "pipe-organ-center",
+        "gulangyu-corner",
+        "longtou-road",
+        "sanqiutian-ferry",
+        "xiamen-ferry",
+        "stay"
+      ],
+      "ferryEdges": [
+        [
+          "dongdu-ferry",
+          "neicuoao-ferry"
+        ],
+        [
+          "sanqiutian-ferry",
+          "xiamen-ferry"
+        ]
+      ],
+      "reminders": [
+        "鼓浪屿当天往返，不住宿。按实际船票上岛；已购三丘田上岛可从东侧开始走，无需为路线重新买票。",
+        "夜航优先核对三丘田 → 厦门轮渡码头。若末班显示24:00，即次日00:00；须查询实际班次和停检时间。",
+        "想搭末班也要提前候船。遇大风、停航预警或班次变更选更早的船；把演奏和返航放在候选景点前。"
+      ],
+      "itinerary": [
+        {
+          "id": "dongdu-ferry",
+          "time": "08:45出发",
+          "duration": "按购票提前到港",
+          "priority": "交通"
+        },
+        {
+          "id": "neicuoao-ferry",
+          "time": "09:30–10:30",
+          "duration": "按实际班次",
+          "priority": "交通",
+          "note": "跨海乘游客轮渡。若已买三丘田票，从三丘田上岛。"
+        },
+        {
+          "id": "luchao-art-school",
+          "time": "10:30–11:30",
+          "duration": "约1小时",
+          "priority": "核心"
+        },
+        {
+          "id": "gulang-stone",
+          "time": "11:30",
+          "duration": "约20分钟",
+          "priority": "核心"
+        },
+        {
+          "id": "meihua-beach",
+          "time": "11:50–12:15",
+          "duration": "约25分钟",
+          "priority": "核心"
+        },
+        {
+          "id": "sunlight-rock",
+          "time": "12:15–13:15",
+          "duration": "约1小时",
+          "priority": "可选"
+        },
+        {
+          "id": "gangzaihou-beach",
+          "time": "13:15",
+          "duration": "约20分钟",
+          "priority": "顺路"
+        },
+        {
+          "id": "shuzhuang-garden",
+          "time": "13:35–14:30",
+          "duration": "约55分钟",
+          "priority": "核心"
+        },
+        {
+          "id": "joint-court",
+          "time": "14:30",
+          "duration": "时间紧只看外观",
+          "priority": "顺路"
+        },
+        {
+          "id": "bagua-organ-museum",
+          "time": "14:50–15:15",
+          "duration": "约25分钟",
+          "priority": "可选"
+        },
+        {
+          "id": "pipe-organ-center",
+          "time": "15:30–16:00",
+          "duration": "参考窗口，待确认",
+          "priority": "核心"
+        },
+        {
+          "id": "gulangyu-corner",
+          "time": "16:00–17:30",
+          "duration": "含周边洋房",
+          "priority": "核心"
+        },
+        {
+          "id": "longtou-road",
+          "time": "17:30–22:30",
+          "duration": "按实际船期调整",
+          "priority": "顺路"
+        },
+        {
+          "id": "sanqiutian-ferry",
+          "time": "约23:00候船",
+          "duration": "以实际船期倒推",
+          "priority": "交通"
+        },
+        {
+          "id": "xiamen-ferry",
+          "time": "夜间返航",
+          "duration": "以码头公告为准",
+          "priority": "交通"
+        },
+        {
+          "id": "stay",
+          "time": "返航后",
+          "duration": "返回本岛住宿点",
+          "priority": "交通"
+        }
+      ],
+      "eastArrival": {
+        "route": [
+          "dongdu-ferry",
+          "sanqiutian-ferry",
+          "gulangyu-corner",
+          "pipe-organ-center",
+          "shuzhuang-garden",
+          "meihua-beach",
+          "gulang-stone",
+          "luchao-art-school",
+          "longtou-road",
+          "sanqiutian-ferry",
+          "xiamen-ferry",
+          "stay"
+        ],
+        "ferryEdges": [
+          [
+            "dongdu-ferry",
+            "sanqiutian-ferry"
+          ],
+          [
+            "sanqiutian-ferry",
+            "xiamen-ferry"
+          ]
+        ],
+        "reminders": [
+          "你选择了从三丘田上岛。按演奏场次和美院开放时间调节东、西两侧的先后。"
+        ],
+        "itinerary": [
+          {
+            "id": "dongdu-ferry",
+            "time": "08:45出发",
+            "duration": "按购票提前到港",
+            "priority": "交通"
+          },
+          {
+            "id": "sanqiutian-ferry",
+            "time": "09:30–10:30",
+            "duration": "按实际船票到达",
+            "priority": "交通",
+            "note": "按三丘田船票上岛，不必重新买票。"
+          },
+          {
+            "id": "gulangyu-corner",
+            "time": "10:30–11:00",
+            "duration": "含周边洋房",
+            "priority": "核心"
+          },
+          {
+            "id": "pipe-organ-center",
+            "time": "11:00 后按场次",
+            "duration": "出发前查当天场次",
+            "priority": "核心",
+            "note": "按公告预留演奏时间；也可傍晚回到东侧再听。"
+          },
+          {
+            "id": "bagua-organ-museum",
+            "time": "11:30",
+            "duration": "约25分钟",
+            "priority": "可选"
+          },
+          {
+            "id": "joint-court",
+            "time": "12:00",
+            "duration": "时间紧只看外观",
+            "priority": "顺路"
+          },
+          {
+            "id": "shuzhuang-garden",
+            "time": "12:45–13:35",
+            "duration": "约55分钟",
+            "priority": "核心"
+          },
+          {
+            "id": "gangzaihou-beach",
+            "time": "13:35",
+            "duration": "约20分钟",
+            "priority": "顺路"
+          },
+          {
+            "id": "sunlight-rock",
+            "time": "14:00",
+            "duration": "约1小时",
+            "priority": "可选"
+          },
+          {
+            "id": "meihua-beach",
+            "time": "15:00",
+            "duration": "约25分钟",
+            "priority": "核心"
+          },
+          {
+            "id": "gulang-stone",
+            "time": "15:25",
+            "duration": "约20分钟",
+            "priority": "核心"
+          },
+          {
+            "id": "luchao-art-school",
+            "time": "16:00 后",
+            "duration": "开放及展览时间待查",
+            "priority": "核心",
+            "note": "若赶不上开放时间，可提前西行去美院，回程再走东侧景点。"
+          },
+          {
+            "id": "longtou-road",
+            "time": "17:30–22:30",
+            "duration": "按实际船期调整",
+            "priority": "顺路"
+          },
+          {
+            "id": "sanqiutian-ferry",
+            "time": "约23:00候船",
+            "duration": "以实际船期倒推",
+            "priority": "交通"
+          },
+          {
+            "id": "xiamen-ferry",
+            "time": "夜间返航",
+            "duration": "以码头公告为准",
+            "priority": "交通"
+          },
+          {
+            "id": "stay",
+            "time": "返航后",
+            "duration": "返回本岛住宿点",
+            "priority": "交通"
+          }
+        ]
+      }
+    },
+    {
+      "id": "departure",
+      "title": "慢慢告别厦门",
+      "accent": "old-town",
+      "area": "老城 · 思北 · 厦门北站",
+      "departure": "退房后约12:00",
+      "route": [
+        "stay",
+        "xian-flower-market",
+        "huaxin-road",
+        "xingfu-road",
+        "sibei",
+        "stay",
+        "metro-line-one",
+        "xiamen-north"
+      ],
+      "reminders": [
+        "10:30–11:30 整理行李，11:30–12:00 退房并询问行李寄存；老城段按体力删减。",
+        "13:30–14:00 取行李，14:00–14:30 为参考出发段，按实际车次倒推。返程是厦门北站。",
+        "带行李时优先跳过殿前飞机点；伴手礼尽量今天再买。"
+      ],
+      "itinerary": [
+        {
+          "id": "stay",
+          "time": "10:30–12:00",
+          "duration": "整理、退房寄存",
+          "priority": "交通"
+        },
+        {
+          "id": "xian-flower-market",
+          "time": "12:00",
+          "duration": "约15分钟",
+          "priority": "顺路"
+        },
+        {
+          "id": "park-west-road",
+          "time": "12:15",
+          "duration": "约10分钟",
+          "priority": "顺路"
+        },
+        {
+          "id": "huaxin-road",
+          "time": "12:25",
+          "duration": "约15分钟",
+          "priority": "核心"
+        },
+        {
+          "id": "caopuwei-road",
+          "time": "12:40",
+          "duration": "约10分钟",
+          "priority": "可选"
+        },
+        {
+          "id": "xingfu-road",
+          "time": "12:50",
+          "duration": "约10分钟",
+          "priority": "顺路"
+        },
+        {
+          "id": "gugong-road",
+          "time": "13:00",
+          "duration": "约10分钟",
+          "priority": "顺路"
+        },
+        {
+          "id": "sibei",
+          "time": "13:10",
+          "duration": "约20分钟",
+          "priority": "核心"
+        },
+        {
+          "id": "zhongshan-park",
+          "time": "午间灵活安排",
+          "duration": "约15分钟",
+          "priority": "可选"
+        },
+        {
+          "id": "stay",
+          "time": "13:30–14:00",
+          "duration": "返回取行李",
+          "priority": "交通"
+        },
+        {
+          "id": "metro-line-one",
+          "time": "14:00–14:30",
+          "duration": "参考出发窗口",
+          "priority": "交通"
+        },
+        {
+          "id": "xiamen-north",
+          "time": "发车前至少1小时",
+          "duration": "留足进站时间",
+          "priority": "交通"
+        }
+      ]
+    }
+  ],
+  "departureBackup": [
+    "bailuzhou-park",
+    "yundang-lake",
+    "tuihua-park",
+    "dianqian-exit-five"
+  ]
+}

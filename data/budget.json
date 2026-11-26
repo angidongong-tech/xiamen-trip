@@ -1,0 +1,72 @@
+{
+  "categories": [
+    "高铁",
+    "酒店",
+    "打车",
+    "地铁",
+    "轮渡",
+    "门票",
+    "正餐",
+    "小吃",
+    "奶茶与咖啡",
+    "特产",
+    "购物",
+    "纪念日",
+    "其他"
+  ],
+  "references": [
+    {
+      "name": "往返高铁",
+      "detail": "340 元 × 2 人 × 2 程",
+      "amount": 1360
+    },
+    {
+      "name": "酒店四晚",
+      "detail": "280 元 × 4 晚",
+      "amount": 1120
+    },
+    {
+      "name": "五天餐饮",
+      "detail": "380 元 × 5 天",
+      "amount": 1900
+    },
+    {
+      "name": "购物及其他",
+      "detail": "旧版预估",
+      "amount": 200
+    },
+    {
+      "name": "市内交通",
+      "amount": null
+    },
+    {
+      "name": "鼓浪屿船票",
+      "amount": null
+    },
+    {
+      "name": "景区门票",
+      "amount": null
+    },
+    {
+      "name": "纪念日额外支出",
+      "amount": null
+    }
+  ],
+  "gifts": [
+    {
+      "id": "sponge",
+      "name": "丹香烘焙海绵蛋糕",
+      "foodId": "danxiang"
+    },
+    {
+      "id": "toast",
+      "name": "丹香烘焙葡萄吐司",
+      "foodId": "danxiang"
+    },
+    {
+      "id": "bread",
+      "name": "思北特香包",
+      "foodId": "sibei-bread"
+    }
+  ]
+}
