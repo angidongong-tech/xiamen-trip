@@ -1,7 +1,8 @@
-const cacheName = 'xiamen-journal-v3';
+const cacheName = 'xiamen-journal-v4';
 const paths = [
   './', './index.html', './credits.html', './manifest.webmanifest',
-  './assets/css/app.css', './assets/js/app.js', './assets/js/state.js', './assets/js/geo-map.js',
+  './assets/css/app.css', './assets/js/app.js', './assets/js/state.js', './assets/js/geo-map.js', './assets/js/cloud.js', './assets/js/cloud-config.js',
+  './assets/js/room-model.js', './assets/js/cloud-view.js', './assets/vendor/supabase/supabase.js',
   './assets/vendor/leaflet/leaflet.js', './assets/vendor/leaflet/leaflet.css',
   './assets/icons/mark.svg', './assets/icons/icon-180.png', './assets/icons/icon-192.png', './assets/icons/icon-512.png',
   './assets/images/cover.webp', './assets/images/old-town.webp', './assets/images/jimei.webp',
